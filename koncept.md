@@ -4,7 +4,7 @@
 3. vypísať všetky faktúry za zvolené obdobie + súčet
 4. transformovať DocBook -> PDF
 
-
+```
 <person category = “worker” month = “10”>
  <name > </name>
 		<days>
@@ -12,3 +12,4 @@
 			<day> 7.5 </day>	
 		<days>
 </person>
+```
