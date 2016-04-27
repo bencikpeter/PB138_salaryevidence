@@ -5,4 +5,11 @@ Táto aplikácia postavená na platforme Java sa bude zaoberať evidenciou príj
 ## Členovia týmu
 ###Vedúci projektu
 [Peter Benčík](https://github.com/bencikpeter)
-
+###Vývojár
+[Peter Tirala]()
+###Vývojár
+[Tomáš Ježek]()
+###Vývojár
+[Oldřich Konečný]()
+###Konzultant
+[Mgr. Luděk Bártek, Ph.D.](https://github.com/ludekbartek)
