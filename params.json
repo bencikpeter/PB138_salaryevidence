@@ -1,0 +1,6 @@
+{
+  "name": "Pb138 salaryevidence",
+  "tagline": "",
+  "body": "# Evidencia príjmov\r\n\r\nTáto aplikácia postavená na platforme Java sa bude zaoberať evidenciou príjmov zamestnancov spoločnosti. Umožní generovať faktúry vo formáte PDF a  Docbook a bude poskytovať štatistické funkcie na analýzu personálnych výdavkov spoločnosti. POdporuje taktiež evidenciu faktúr za určité zvolené obdobie.\r\n\r\n## Členovia týmu\r\n###Vedúci projektu\r\n[Peter Benčík](https://github.com/bencikpeter)\r\n###Vývojár\r\n[Peter Tirala]()\r\n###Vývojár\r\n[Tomáš Ježek]()\r\n###Vývojár\r\n[Oldřich Konečný]()\r\n###Konzultant\r\n[Mgr. Luděk Bártek, Ph.D.](https://github.com/ludekbartek)",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
