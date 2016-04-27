@@ -13,3 +13,8 @@
 		<days>
 </person>
 ```
+
+##Just toughts
+Sme štvorčlenný tým, možno by bolo fajn sa rozdeliť trošku špecifickejšie (a asi to bude aj Bartek požadovať).
+Mne príde celkom zmysluplné rozdeliť sa podľa "technológií". Nech sa nemusíme každý orientovať vo všetkom.
+Jeden by si vzal Databázu, druhý transformácie (XML -> DocBook -> PDF), tretí gui a štvrtý businesslogic. Čo vy na to?
