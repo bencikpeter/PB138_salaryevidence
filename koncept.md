@@ -19,4 +19,4 @@ Sme štvorčlenný tým, možno by bolo fajn sa rozdeliť trošku špecifickejš
 Mne príde celkom zmysluplné rozdeliť sa podľa "technológií". Nech sa nemusíme každý orientovať vo všetkom.
 Jeden by si vzal Databázu, druhý transformácie (XML -> DocBook -> PDF), tretí gui a štvrtý businesslogic. Čo vy na to?
 
-Mne by sa páčilo robiť GUI, ale viem sa prispôsôbiť (Peter B.) 
+Mne by sa páčilo robiť tie transformácie, ale viem sa prispôsôbiť (Peter B.) 
