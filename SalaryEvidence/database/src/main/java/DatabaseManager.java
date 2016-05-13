@@ -61,4 +61,18 @@ public interface DatabaseManager {
      */
     List<DayRecord> findRecord(LocalDate from, LocalDate to) throws DatabaseFailureException;
 
+    /**
+     * find oldest record in database.
+     * @return record from database or null if database is empty.
+     * @throws DatabaseFailureException when db operation fails.
+     */
+    DayRecord getOldest() throws DatabaseFailureException;
+
+    /**
+     * find newest record in database.
+     * @return record from database of null if database is empty.
+     * @throws DatabaseFailureException when db operation fails.
+     */
+    DayRecord getNewest() throws DatabaseFailureException;
+
 }
