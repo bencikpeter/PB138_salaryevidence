@@ -5,15 +5,20 @@
  */
 package GUI;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author peter
  */
 public class BasicFrame extends javax.swing.JFrame {
+    
     private static final ResourceBundle bundle = ResourceBundle.getBundle("GUI/Bundle");
-
+    
     /**
      * Creates new form BasicFrame
      */
@@ -30,31 +35,34 @@ public class BasicFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        PDF_FileChooser = new javax.swing.JFileChooser();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jComboBox1 = new javax.swing.JComboBox<String>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        Job_Label = new javax.swing.JLabel();
+        Add_Button = new javax.swing.JButton();
+        Quit_Button1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        From_Label = new javax.swing.JLabel();
+        FromDate_Spinner = new javax.swing.JSpinner();
+        To_Label = new javax.swing.JLabel();
+        ToDate_Spinner = new javax.swing.JSpinner();
+        DocBook_Button = new javax.swing.JButton();
+        PDF_Button = new javax.swing.JButton();
+        Quit_Button2 = new javax.swing.JButton();
+
+        PDF_FileChooser.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("GUI/Bundle"); // NOI18N
+        PDF_FileChooser.setDialogTitle(bundle.getString("PDF_EXPORT")); // NOI18N
+        javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileNameExtensionFilter(bundle.getString("PDF_FILE_DESCRIPTION"),"pdf");
+        PDF_FileChooser.setFileFilter(filter);
+        PDF_FileChooser.setDragEnabled(true);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -69,21 +77,21 @@ public class BasicFrame extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(jTable1);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("GUI/Bundle"); // NOI18N
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("HOURS")); // NOI18N
             jTable1.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("DAY")); // NOI18N
             jTable1.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("DATE")); // NOI18N
         }
 
-        jLabel1.setText(bundle.getString("JOB")); // NOI18N
+        Job_Label.setText(bundle.getString("JOB")); // NOI18N
+        Job_Label.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jButton1.setText(bundle.getString("ADD")); // NOI18N
+        Add_Button.setText(bundle.getString("ADD")); // NOI18N
 
-        jButton5.setText(bundle.getString("QUIT")); // NOI18N
-        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+        Quit_Button1.setText(bundle.getString("QUIT")); // NOI18N
+        Quit_Button1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton5MouseClicked(evt);
+                Quit_Button21MouseClicked(evt);
             }
         });
 
@@ -94,46 +102,67 @@ public class BasicFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel1)
+                    .addComponent(Add_Button)
+                    .addComponent(Job_Label)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(12, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5)
+                .addComponent(Quit_Button1)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(Job_Label)
                 .addGap(3, 3, 3)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(Add_Button)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                .addComponent(jButton5)
+                .addComponent(Quit_Button1)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab(bundle.getString("NEW"), jPanel1); // NOI18N
 
-        jLabel2.setText(bundle.getString("FROM")); // NOI18N
+        From_Label.setText(bundle.getString("FROM")); // NOI18N
 
-        jLabel3.setText(bundle.getString("TO")); // NOI18N
+        FromDate_Spinner.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1451602800000L), null, new java.util.Date(), java.util.Calendar.DAY_OF_YEAR));
+        FromDate_Spinner.setEditor(new javax.swing.JSpinner.DateEditor(FromDate_Spinner, "dd. MM. yyyy"));
+        FromDate_Spinner.setToolTipText(bundle.getString("TOOLTIP_FROM")); // NOI18N
+        FromDate_Spinner.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jButton2.setText(bundle.getString("DOCBOOK")); // NOI18N
+        To_Label.setText(bundle.getString("TO")); // NOI18N
 
-        jButton3.setText(bundle.getString("PDF")); // NOI18N
+        ToDate_Spinner.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, new java.util.Date(), java.util.Calendar.DAY_OF_YEAR));
+        ToDate_Spinner.setEditor(new javax.swing.JSpinner.DateEditor(ToDate_Spinner, "dd. MM. yyyy"));
+        ToDate_Spinner.setToolTipText(bundle.getString("TOOLTIP_TO")); // NOI18N
 
-        jButton4.setText(bundle.getString("QUIT")); // NOI18N
-        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+        DocBook_Button.setText(bundle.getString("DOCBOOK")); // NOI18N
+        DocBook_Button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton5MouseClicked(evt);
+                DocBook_ButtonMouseClicked(evt);
+            }
+        });
+
+        PDF_Button.setText(bundle.getString("PDF")); // NOI18N
+        PDF_Button.setToolTipText(bundle.getString("PDF_EXPORT")); // NOI18N
+        PDF_Button.setActionCommand(bundle.getString("PDF")); // NOI18N
+        PDF_Button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                PDF_ButtonMouseClicked(evt);
+            }
+        });
+
+        Quit_Button2.setText(bundle.getString("QUIT")); // NOI18N
+        Quit_Button2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Quit_Button21MouseClicked(evt);
             }
         });
 
@@ -144,40 +173,39 @@ public class BasicFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(132, 300, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2)
+                        .addComponent(DocBook_Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
+                        .addComponent(PDF_Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
-                        .addContainerGap())))
+                        .addComponent(Quit_Button2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(From_Label)
+                            .addComponent(FromDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(To_Label)
+                            .addComponent(ToDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(From_Label)
+                    .addComponent(To_Label))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 198, Short.MAX_VALUE)
+                    .addComponent(ToDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(FromDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(DocBook_Button)
+                    .addComponent(PDF_Button)
+                    .addComponent(Quit_Button2))
                 .addContainerGap())
         );
 
@@ -202,16 +230,90 @@ public class BasicFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+            
+    /** 
+     * Button to exit the application
+     * @param evt Mouse click on Quit button
+     */
+    private void Quit_Button21MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Quit_Button21MouseClicked
+            System.exit(0);
+    }//GEN-LAST:event_Quit_Button21MouseClicked
+    
+    /**
+     * Button to  export data from the selected range as PDF
+     * @param evt Mouse click on Save as PDF button
+     */
+    private void PDF_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PDF_ButtonMouseClicked
+        
+        saveFile("PDF PDF PDF PDF PDF PDF PDF", "pdf", PDF_FileChooser); // ►►►        
+        
+    }//GEN-LAST:event_PDF_ButtonMouseClicked
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
-    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
-        // KLIKNUTÍ MYŠI
-        System.exit(0);
-    }//GEN-LAST:event_jButton5MouseClicked
-
+    private void DocBook_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DocBook_ButtonMouseClicked
+        saveFile("<?xml version='1.0' encoding='utf-8'?>\n"                
+                + "<!DOCTYPE book PUBLIC '-//OASIS//DTD DocBook XML V4.5//EN' 'http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd'>\n"
+                + "<book lang=\"cs\">\n\n"
+                + "</book>",
+                "xml"); // TODO ►►► DOC_FileChooser
+    }//GEN-LAST:event_DocBook_ButtonMouseClicked
+    
+    /**
+     * Function saving file in picked format     
+     * @param saved_text Text to be saved inside the new file
+     * @param extension Extension of created file without dot (default "txt")
+     * @param fileChooser FileChooser to use to handle user input. A default one is used if null.
+     */
+    private void saveFile(String saved_text, String extension, javax.swing.JFileChooser fileChooser) {
+        if (fileChooser == null) fileChooser = new javax.swing.JFileChooser();
+        if (extension == null) extension = "txt";        
+        int actionDialog = fileChooser.showSaveDialog(this);        
+        //fileChooser.setCurrentDirectory(new File( "./"));        
+        if (actionDialog == javax.swing.JFileChooser.APPROVE_OPTION)
+        {
+            File fileName = new File( fileChooser.getSelectedFile() + "." + extension );
+            if(fileName == null) return;
+            if(fileName.exists())
+            {
+                actionDialog = javax.swing.JOptionPane.showConfirmDialog(this, bundle.getString("REPLACE_FILE"));
+                // CANCEL
+                if (actionDialog == javax.swing.JOptionPane.NO_OPTION)
+                    return;
+            }
+            // Write file
+            BufferedWriter outFile = null;
+            try {
+                outFile = new BufferedWriter( new FileWriter( fileName ) );
+            } catch (IOException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                outFile.write(saved_text); // ►►►
+            } catch (IOException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                outFile.flush();
+                outFile.close();
+            } catch (IOException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+           }        
+    }
+    /**
+     * Saves file of chosen type using the default JFileChooser
+     * @param saved_text Text to be saved inside the new file
+     * @param extension Extension of created file without dot (default "txt")
+     */
+    private void saveFile (String saved_text, String extension) {
+        javax.swing.JFileChooser FFF = new javax.swing.JFileChooser();
+        saveFile(saved_text, extension, FFF);
+    }
+    /** 
+     * Button to change language
+     * @param evt - Click button to change language to the next one 
+     *
+     * /    */
+    
     /**
      * @param args the command line arguments
      */
@@ -248,21 +350,22 @@ public class BasicFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton Add_Button;
+    private javax.swing.JButton DocBook_Button;
+    private javax.swing.JSpinner FromDate_Spinner;
+    private javax.swing.JLabel From_Label;
+    private javax.swing.JLabel Job_Label;
+    private javax.swing.JButton PDF_Button;
+    private javax.swing.JFileChooser PDF_FileChooser;
+    private javax.swing.JButton Quit_Button1;
+    private javax.swing.JButton Quit_Button2;
+    private javax.swing.JSpinner ToDate_Spinner;
+    private javax.swing.JLabel To_Label;
     private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }
