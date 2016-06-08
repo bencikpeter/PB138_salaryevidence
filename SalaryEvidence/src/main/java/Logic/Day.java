@@ -1,6 +1,5 @@
 package Logic;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
 
@@ -10,7 +9,7 @@ import java.util.Objects;
  */
 public class Day {
     private int hours;
-    private LocalDate date; 
+    private long date; 
     private Jobs job;
 
     public int getHours() {
@@ -21,11 +20,11 @@ public class Day {
         this.hours = hours;
     }
 
-    public LocalDate getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
