@@ -1,3 +1,5 @@
+package main.java;
+
 /**
  * WorkType represents position where worker worked
  * Created by oldrichkonecny on 13.05.16.

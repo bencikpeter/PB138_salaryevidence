@@ -1,3 +1,5 @@
+package main.java;
+
 import javax.xml.bind.DataBindingException;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,15 +36,8 @@ public interface DatabaseManager {
      * @param unixDate date of record to be deleted.
      * @throws DatabaseFailureException when db operation fails.
      */
-    void deleteRecord(Long unixDate) throws DatabaseFailureException;
+    void deleteRecord(long unixDate) throws DatabaseFailureException;
 
-    /**
-     * Find record in database by id
-     * @param id of Record to be found.
-     * @return list with one or none record.
-     * @throws DatabaseFailureException when db operation fails.
-     */
-    List<DayRecord> findRecord(Long id) throws DatabaseFailureException;
 
     /**
      * Find record in database by date.
@@ -50,7 +45,7 @@ public interface DatabaseManager {
      * @return list with one or none record.
      * @throws DatabaseFailureException when db operation fails.
      */
-    List<DayRecord> findRecord(LocalDate date) throws DatabaseFailureException;
+    List<DayRecord> findRecord(long date) throws DatabaseFailureException;
 
     /**
      * Find all records in database from - to.
@@ -59,7 +54,7 @@ public interface DatabaseManager {
      * @return List of records
      * @throws DatabaseFailureException when db operation fails.
      */
-    List<DayRecord> findRecord(LocalDate from, LocalDate to) throws DatabaseFailureException;
+    List<DayRecord> findRecord(long from, long to) throws DatabaseFailureException;
 
     /**
      * find oldest record in database.

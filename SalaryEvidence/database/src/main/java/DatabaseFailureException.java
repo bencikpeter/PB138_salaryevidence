@@ -1,3 +1,5 @@
+package main.java;
+
 /**
  * DatabaseFailureException represent database exceptions
  * Created by oldrichkonecny on 13.05.16.

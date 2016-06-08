@@ -1,3 +1,5 @@
+package main.java;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,22 +25,17 @@ public class DatabaseManagerImpl implements DatabaseManager{
     }
 
     @Override
-    public void deleteRecord(Long unixDate) throws DatabaseFailureException {
+    public void deleteRecord(long unixDate) throws DatabaseFailureException {
 
     }
 
     @Override
-    public List<DayRecord> findRecord(Long id) throws DatabaseFailureException {
+    public List<DayRecord> findRecord(long date) throws DatabaseFailureException {
         return null;
     }
 
     @Override
-    public List<DayRecord> findRecord(LocalDate date) throws DatabaseFailureException {
-        return null;
-    }
-
-    @Override
-    public List<DayRecord> findRecord(LocalDate from, LocalDate to) throws DatabaseFailureException {
+    public List<DayRecord> findRecord(long from, long to) throws DatabaseFailureException {
         return null;
     }
 
