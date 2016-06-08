@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<jobs>
+    <REGIONAL_MANAGER>
+        <salary>250</salary>
+    </REGIONAL_MANAGER>
+    <ASSISTANT_REGIONAL_MANAGER>
+        <salary>150</salary>
+    </ASSISTANT_REGIONAL_MANAGER>
+    <HUMAN_RESOURCES_REPRESENTATIVE>
+        <salary>170</salary>
+    </HUMAN_RESOURCES_REPRESENTATIVE>
+    <SALESPERSON>
+        <salary>120</salary>
+    </SALESPERSON>
+    <ACCOUNTANT>
+        <salary>100</salary>
+    </ACCOUNTANT>
+    <SUPPLIER_RELATIONS>
+        <salary>120</salary>
+    </SUPPLIER_RELATIONS>
+    <QUALITY_ASSURANCE>
+        <salary>130</salary>
+    </QUALITY_ASSURANCE>
+    <CUSTOMER_RELATIONS>
+        <salary>160</salary>
+    </CUSTOMER_RELATIONS>
+    <WAREHOUSE_FOREMAN>
+        <salary>220</salary>
+    </WAREHOUSE_FOREMAN>
+    <WAREHOUSE_EMPLOYEE>
+        <salary>110</salary>
+    </WAREHOUSE_EMPLOYEE>
+    <RECEPTIONIST>
+        <salary>80</salary>
+    </RECEPTIONIST>
+</jobs>
