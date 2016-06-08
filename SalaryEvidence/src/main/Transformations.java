@@ -2,6 +2,7 @@ package main;
 
 import org.xml.sax.SAXException;
 
+import javax.xml.transform.TransformerConfigurationException;
 import java.io.File;
 
 /**
@@ -13,12 +14,12 @@ public final class Transformations {
         throw new UnsupportedOperationException("Transformations is utility class - cannot be instantiated");
     }
 
-    public static XmlSchemaValidator getNewInstanceXmlSchemaValidator(File schema) throws SAXException {
+    public static XmlSchemaValidator getNewInstanceXmlSchemaValidator(File schema) throws SAXException { //bad schema
         return new XmlSchemaValidatorImpl(schema);
     }
 
-    public static XmlToDocbookTransformation getNewInstanceXmlToDocbook(){
-        return null;
+    public static XmlToDocbookTransformation getNewInstanceXmlToDocbook(File xsltDef) throws TransformerConfigurationException { //bad xsltDef
+        return new XmlToDocbookTransformationImpl(xsltDef);
     }
 
     public static DocbookToPdfTransformation getNewInstanceDocbookToPdf(){
