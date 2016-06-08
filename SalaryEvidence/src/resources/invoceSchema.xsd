@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xsd:include schemaLocation="daySchema.xsd" />
+
+  <xsd:element name="invoce">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="days" type="Days" />
+        <xsd:element name="sum" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="Days">
+    <xsd:sequence>
+        <xsd:element name="day" type="Day" minOccurs="1" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
