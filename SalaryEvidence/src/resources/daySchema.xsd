@@ -8,6 +8,7 @@
         <xsd:sequence>
             <xsd:element name="hours" type="Hours"/>
             <xsd:element name="job" type="xsd:string"/>
+            <xsd:element name="perhour" type="Hours" minOccurs="0" />
         </xsd:sequence>
         <xsd:attribute name="date" type="Date" use="required"/>
     </xsd:complexType>
