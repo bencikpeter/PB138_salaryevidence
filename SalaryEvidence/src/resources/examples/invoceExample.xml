@@ -1,0 +1,32 @@
+<invoce>
+    <days>
+        <day date="1463529600">
+            <hours>
+                10
+            </hours>
+            <job>
+                Whatever
+            </job>
+            <perhour>
+              8
+            </perhour>
+        </day>
+        <day date="1459814400">
+            <hours>
+                6
+            </hours>
+            <job>
+                Something
+            </job>
+            <perhour>
+              6
+            </perhour>
+        </day>
+    </days>
+    <sum>
+        40
+    </sum>
+    <salarysum>
+      120
+    </salarysum>
+</invoce>
