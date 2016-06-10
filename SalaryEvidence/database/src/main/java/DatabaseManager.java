@@ -12,24 +12,24 @@ public interface DatabaseManager {
 
     /**
      * Stores new record into database, id is generated automatically.
-     * @param dayRecord record to be stored.
+     * @param day record to be stored.
      * @throws DatabaseFailureException when db operation fails.
      */
-    void createRecord(DayRecord dayRecord) throws DatabaseFailureException;
+    void createRecord(Day day) throws DatabaseFailureException;
 
     /**
      * Update record in database, if record is not found in database, nothing happen.
-     * @param dayRecord record to be updated.
+     * @param day record to be updated.
      * @throws DatabaseFailureException when db operation fails.
      */
-    void updateRecord(DayRecord dayRecord) throws DatabaseFailureException;
+    void updateRecord(Day day) throws DatabaseFailureException;
 
     /**
      * Delete record in database, if record is not found, nothing happen.
-     * @param dayRecord record to be deleted.
+     * @param day record to be deleted.
      * @throws DatabaseFailureException when db operation fails.
      */
-    void deleteRecord(DayRecord dayRecord) throws DatabaseFailureException;
+    void deleteRecord(Day day) throws DatabaseFailureException;
 
     /**
      * Delete record in database, if record is not found, nothing happen.
@@ -45,7 +45,7 @@ public interface DatabaseManager {
      * @return list with one or none record.
      * @throws DatabaseFailureException when db operation fails.
      */
-    List<DayRecord> findRecord(long date) throws DatabaseFailureException;
+    List<Day> findRecord(long date) throws DatabaseFailureException;
 
     /**
      * Find all records in database from - to.
@@ -54,20 +54,20 @@ public interface DatabaseManager {
      * @return List of records
      * @throws DatabaseFailureException when db operation fails.
      */
-    List<DayRecord> findRecord(long from, long to) throws DatabaseFailureException;
+    List<Day> findRecord(long from, long to) throws DatabaseFailureException;
 
     /**
      * find oldest record in database.
      * @return record from database or null if database is empty.
      * @throws DatabaseFailureException when db operation fails.
      */
-    DayRecord getOldest() throws DatabaseFailureException;
+    Day getOldest() throws DatabaseFailureException;
 
     /**
      * find newest record in database.
      * @return record from database of null if database is empty.
      * @throws DatabaseFailureException when db operation fails.
      */
-    DayRecord getNewest() throws DatabaseFailureException;
+    Day getNewest() throws DatabaseFailureException;
 
 }

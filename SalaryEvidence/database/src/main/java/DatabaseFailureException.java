@@ -1,15 +1,13 @@
 package main.java;
 
 /**
- * DatabaseFailureException represent database exceptions
- * Created by oldrichkonecny on 13.05.16.
+ * Created by olda on 09.06.2016.
  */
-public class DatabaseFailureException extends RuntimeException {
+public class DatabaseFailureException extends Exception {
 
     public DatabaseFailureException(String message) { super(message); }
 
     public DatabaseFailureException(Throwable cause) { super(cause); }
 
     public DatabaseFailureException(String message, Throwable cause) { super(message, cause); }
-
 }
