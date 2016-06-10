@@ -29,15 +29,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 
 public class BasicFrame extends javax.swing.JFrame {
-    
-    /**
-     * Gui bude vytvarat nove Days to posle priamo na funkciu create z DB, 
-     * potom je tam moznost generovat podla tych datumov, 
-     * Tie datumy sa poslu do DB ktora vrati List<Days> ktore su v tom rozsahu. 
-     * Ten list sa v AppLogic transformuje do XML formatu faktury ulozi sa 
-     * a cesta k nemu sa uz posle na Transformaciu.
-     */
-    
+
     /**
      * Localisation
      */
