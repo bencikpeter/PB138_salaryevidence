@@ -2,13 +2,13 @@ package main.java;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
+import org.xmldb.api.modules.XMLResource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.BufferedWriter;
@@ -36,12 +36,22 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
         try {
 
-
-            // initialize database driver
+            String URI = "xmldb:exist://localhost:8080/exist/xmlrpc";
             Class cl = Class.forName(driver);
             Database database = (Database) cl.newInstance();
             database.setProperty("create-database", "true");
-            //DatabaseManager.registerDatabase(database);
+            org.xmldb.api.DatabaseManager.registerDatabase(database);
+            XMLResource res = null;
+
+            Collection col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+            File f = createFile(day);
+
+            XMLResource document = (XMLResource)col.createResource(day.getDate().toString(), "XMLResource");
+            document.setContent(f);
+            System.out.print("storing document " + document.getId() + "...");
+            col.storeResource(document);
+            System.out.println("ok.");
+
         }catch (Exception e) {
 
         }
@@ -100,20 +110,22 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     private File createFile(Day day) {
         try {
-            File tmp = File.createTempFile(day.getDate().toString(), ".xml");
+            File tmp = File.createTempFile(String.valueOf(day.getDate()), ".xml");
             tmp.deleteOnExit();
 
-            BufferedWriter bw = new BufferedWriter(new FileWriter(tmp));
-            bw.write(makeXMLString(day));
-            bw.close();
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            Result result = new StreamResult(tmp);
+            Source input = new DOMSource(this.makeXMLString(day));
+            transformer.transform(input, result);
+
             return tmp;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private String makeXMLString(Day day) {
+    private Document makeXMLString(Day day) {
         DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder icBuilder;
         try {
@@ -134,7 +146,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
             Element perhourElem = doc.createElement("perhour");
             perhourElem.appendChild(doc.createTextNode(String.valueOf(day.getPerHours())));
             root.appendChild(perhourElem);
-            return doc.toString();
+            return doc;
 
         } catch (Exception e) {
             e.printStackTrace();
