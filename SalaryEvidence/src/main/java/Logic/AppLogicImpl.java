@@ -9,8 +9,11 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -25,11 +28,16 @@ import org.xml.sax.SAXException;
  *Implements AppLogic interface.
  * @author Peter Tirala
  */
-public class AppLogicImpl implements AppLogic{
+public class AppLogicImpl {
 
-    @Override
-    public Path createInvoice(List<Day> listOfDays) {
+    /**
+     * 
+     * @param listOfDays
+     * @return 
+     */
+    public File createInvoice(List<Day> listOfDays) {
         int sum= 0;
+        int hodiny = 0;
         try{
             File jobsFile = new File("jobs.xml");
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -45,13 +53,10 @@ public class AppLogicImpl implements AppLogic{
             Element days = doc.createElement("days");           // days
             rootElement.appendChild(days);
             for(Day listDay : listOfDays){
-                Element day = doc.createElement("day");         // Jednotlivy den
+                Element day = doc.createElement("day");  
+                day.setAttribute("date", String.valueOf(listDay.getDate() ));   // datum
                 days.appendChild(day);
-                
-                Attr attr = doc.createAttribute("date");            // Atribut dna - datum - primary key
-                attr.setValue(Long.toString(listDay.getDate()));                        
-                day.setAttributeNode(attr);
-                
+                              
                 Element hours = doc.createElement("hours");     // Hodiny
                 hours.appendChild(doc.createTextNode(String.valueOf(listDay.getHours())));
                 day.appendChild(hours);
@@ -63,24 +68,39 @@ public class AppLogicImpl implements AppLogic{
                 findJob =(Element) docJobs.getElementsByTagName(listDay.getJob().name()).item(0);
                 salary = (Element) findJob.getElementsByTagName("salary").item(0);
                 
+                hodiny = hodiny + listDay.getHours();
                 sum = sum +  listDay.getHours()*(Integer.parseInt(salary.getTextContent()));    // Vypocita celu sumu       
             }   
-            Element suma = doc.createElement("suma");
+            Element hodinyElem = doc.createElement("sum");
+            hodinyElem.appendChild(doc.createTextNode(String.valueOf(hodiny)));
+            rootElement.appendChild(hodinyElem);
+            Element suma = doc.createElement("salarysum");
             suma.appendChild(doc.createTextNode(String.valueOf(sum)));
             rootElement.appendChild(suma);
             
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(doc);
-   //         StreamResult result = new StreamResult(new File("C:\\file.xml"));               //ukladanie do DB
+            File tmp = File.createTempFile("faktura-"/*+autoincrement premenna*/, ".xml");              // autoincrement aj do atributu invoice
+            tmp.deleteOnExit();
+
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            Result result = new StreamResult(tmp);
+            Source input = new DOMSource(doc);
+            transformer.transform(input, result);
             
-        }catch(ParserConfigurationException pce){
-            pce.printStackTrace();
-        } catch (TransformerConfigurationException ex) {
-            ex.printStackTrace();
-        } catch (SAXException ex) {
+             Collection col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+            
+            XMLResource document = (XMLResource)col.createResource(day.getDate().toString(), "XMLResource");
+             document.setContent(tmp);
+             col.storeResource(document);
+             
+            return tmp;
+            
+            
+      
+        } catch (SAXException | IOException | ParserConfigurationException ex) {
             Logger.getLogger(AppLogicImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(AppLogicImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
             Logger.getLogger(AppLogicImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;    // return path ulozeneho xml
