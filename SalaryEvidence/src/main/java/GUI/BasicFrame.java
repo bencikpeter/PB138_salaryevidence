@@ -38,7 +38,9 @@ public class BasicFrame extends javax.swing.JFrame {
      *  Date format in GUI
      */
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-    
+    /**
+     *  Database manager
+     */
     private static final Database.DatabaseManager databaseManager = new Database.DatabaseManagerImpl();
     
     /**
@@ -192,22 +194,20 @@ public class BasicFrame extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(Add_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(Add_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Quit_Button1)))
+                                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(Quit_Button1, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -341,14 +341,17 @@ public class BasicFrame extends javax.swing.JFrame {
     
     /**
      * Button to export data from the selected range as PDF
-     * @param evt Mouse click on Save as PDF button
+     * @param evt Mouse click on PDF button
      */
     private void PDF_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PDF_ButtonMouseClicked
         
         saveFile("PDF PDF PDF PDF PDF PDF PDF", "pdf", PDF_FileChooser); // ►►►        
         
     }//GEN-LAST:event_PDF_ButtonMouseClicked
-
+    /**
+     * Button to export data from the selected range as DocBook
+     * @param evt Mouse click on DocBook buttom
+     */
     private void DocBook_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DocBook_ButtonMouseClicked
         saveFile("<?xml version='1.0' encoding='utf-8'?>\n"                
                 + "<!DOCTYPE book PUBLIC '-//OASIS//DTD DocBook XML V4.5//EN' 'http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd'>\n"
@@ -387,15 +390,14 @@ public class BasicFrame extends javax.swing.JFrame {
             
             // ►►► DATE
             Date date;
-            try {
-                System.out.println(jTable1.getModel().getValueAt(row, 0).toString());                
-                date = formatter.parse(jTable1.getModel().getValueAt(row, 0).toString());
-                System.out.println(date.toString());
+            try {                               
+                date = formatter.parse(jTable1.getModel().getValueAt(row, 0).toString());                
             } catch (ParseException ex) {
                 Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Wrong date format", ex);
                 continue;
             }
-            Long dateCell = date.getTime()/1000; // UNIX DATE            
+            Long dateCell = date.getTime()/1000; // UNIX DATE 
+            System.out.println(dateCell);
             day.setDate(dateCell);
             
             // ►►► HOURS
@@ -410,13 +412,17 @@ public class BasicFrame extends javax.swing.JFrame {
     // ♦♦♦ database (TEMP)
             Database.Jobs TEMP_databaseJob = Database.Jobs.valueOf(job.name());
             day.setJob(TEMP_databaseJob);
-            //day.setJob(job); 
+          //day.setJob(job); 
             
             // COMPLETED ROW => add Day
             try {                
                 databaseManager.createRecord(day);   
             } catch (DatabaseFailureException ex) {
-                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Error when saving to database", ex);
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Error when saving to database\n", ex);
+    // ♦♦♦ TEMP
+            } catch (UnsupportedOperationException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.WARNING, "Adding to database currently not supported\n");
+                continue;
             }
             
         } // <- for all rows
