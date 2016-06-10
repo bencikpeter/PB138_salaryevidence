@@ -1,23 +1,53 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GUI;
 
+// database imports
+import Database.DatabaseFailureException;
+import Database.Day;
+import Database.DayRecord;
+
+
+import com.sun.javafx.binding.Logging;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.MouseEvent;
 import java.io.*;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 
-/**
- *
- * @author peter
- */
 public class BasicFrame extends javax.swing.JFrame {
     
+    /**
+     * Gui bude vytvarat nove Days to posle priamo na funkciu create z DB, 
+     * potom je tam moznost generovat podla tych datumov, 
+     * Tie datumy sa poslu do DB ktora vrati List<Days> ktore su v tom rozsahu. 
+     * Ten list sa v AppLogic transformuje do XML formatu faktury ulozi sa 
+     * a cesta k nemu sa uz posle na Transformaciu.
+     */
+    
+    /**
+     * Localisation
+     */
     private static final ResourceBundle bundle = ResourceBundle.getBundle("GUI/Bundle");
+    /**
+     *  Date format in GUI
+     */
+    private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+    
+    private static final Database.DatabaseManager databaseManager = new Database.DatabaseManagerImpl();
     
     /**
      * Creates new form BasicFrame
@@ -36,14 +66,18 @@ public class BasicFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         PDF_FileChooser = new javax.swing.JFileChooser();
+        jDialog1 = new javax.swing.JDialog();
+        jLabel1 = new javax.swing.JLabel();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jButton1 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox<String>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        Job_Label = new javax.swing.JLabel();
         Add_Button = new javax.swing.JButton();
         Quit_Button1 = new javax.swing.JButton();
+        jToggleButton2 = new javax.swing.JToggleButton();
+        jToggleButton3 = new javax.swing.JToggleButton();
         jPanel2 = new javax.swing.JPanel();
         From_Label = new javax.swing.JLabel();
         FromDate_Spinner = new javax.swing.JSpinner();
@@ -60,33 +94,85 @@ public class BasicFrame extends javax.swing.JFrame {
         PDF_FileChooser.setFileFilter(filter);
         PDF_FileChooser.setDragEnabled(true);
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel1.setText(bundle.getString("ADD_TOOLTIP")); // NOI18N
+
+        jToggleButton1.setText("OK");
+
+        jButton1.setText("Cancel");
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jDialog1Layout.createSequentialGroup()
+                        .addComponent(jToggleButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jToggleButton1)
+                    .addComponent(jButton1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
+        // Dnesni datum
+        //DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        Date date = new Date();
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {formatter.format(date), 8, null} // null, aby se omylem nepridaval placeholder
             },
             new String [] {
-                "Hours", "Day", "Date"
+                bundle.getString("DATE"), bundle.getString("HOURS"), bundle.getString("JOB")
             }
         ));
+        jTable1.setToolTipText("");
+        jTable1.setRowHeight(24);
         jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("HOURS")); // NOI18N
-            jTable1.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("DAY")); // NOI18N
-            jTable1.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("DATE")); // NOI18N
+        // Datum prvniho sloupce
+        DefaultTableCellRenderer renderer1 = new DefaultTableCellRenderer();
+        renderer1.setToolTipText(bundle.getString("TABLE_TOOLTIP1"));
+        jTable1.getColumnModel().getColumn(0).setCellRenderer(renderer1);
+        jTable1.getColumnModel().getColumn(0).setCellEditor(new DateCellEditor(new JTextField()));
+        // Hodiny druheho sloupce
+        DefaultTableCellRenderer renderer2 = new DefaultTableCellRenderer();
+        renderer2.setToolTipText(bundle.getString("TABLE_TOOLTIP2"));
+        jTable1.getColumnModel().getColumn(1).setCellRenderer(renderer2);
+        jTable1.getColumnModel().getColumn(1).setCellEditor(new HoursCellEditor(new JTextField()));
+        //jTable1.getColumnModel().getColumn(1).setCellEditor(new DateCellEditor(new JTextField(), "kk"));
+        // Enum tretiho sloupce
+        JComboBox comboBox = new JComboBox();
+        comboBox.addItem(""); // empty input
+        for (Jobs job : Jobs.values()) {
+            comboBox.addItem(job.toString());
+            // prace se bere z Resource bundle
         }
-
-        Job_Label.setText(bundle.getString("JOB")); // NOI18N
-        Job_Label.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        DefaultTableCellRenderer renderer3 = new DefaultTableCellRenderer();
+        renderer3.setToolTipText(bundle.getString("TABLE_TOOLTIP3"));
+        jTable1.getColumnModel().getColumn(2).setCellRenderer(renderer3);
+        jTable1.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(comboBox));
 
         Add_Button.setText(bundle.getString("ADD")); // NOI18N
+        Add_Button.setToolTipText(bundle.getString("ADD_TOOLTIP")); // NOI18N
+        Add_Button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                Add_ButtonMousePressed(evt);
+            }
+        });
 
         Quit_Button1.setText(bundle.getString("QUIT")); // NOI18N
         Quit_Button1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -95,35 +181,55 @@ public class BasicFrame extends javax.swing.JFrame {
             }
         });
 
+        jToggleButton2.setText(bundle.getString("ADD_ROW")); // NOI18N
+        jToggleButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jToggleButton2MousePressed(evt);
+            }
+        });
+
+        jToggleButton3.setText(bundle.getString("REMOVE_ROW")); // NOI18N
+        jToggleButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jToggleButton3MousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Add_Button)
-                    .addComponent(Job_Label)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(12, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Quit_Button1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(Add_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Quit_Button1)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Job_Label)
-                .addGap(3, 3, 3)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(Add_Button)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jToggleButton2)
+                        .addComponent(jToggleButton3))
+                    .addComponent(Add_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Quit_Button1)
                 .addContainerGap())
         );
@@ -133,14 +239,14 @@ public class BasicFrame extends javax.swing.JFrame {
         From_Label.setText(bundle.getString("FROM")); // NOI18N
 
         FromDate_Spinner.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1451602800000L), null, new java.util.Date(), java.util.Calendar.DAY_OF_YEAR));
-        FromDate_Spinner.setEditor(new javax.swing.JSpinner.DateEditor(FromDate_Spinner, "dd. MM. yyyy"));
+        FromDate_Spinner.setEditor(new javax.swing.JSpinner.DateEditor(FromDate_Spinner, formatter.toPattern()));
         FromDate_Spinner.setToolTipText(bundle.getString("TOOLTIP_FROM")); // NOI18N
         FromDate_Spinner.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         To_Label.setText(bundle.getString("TO")); // NOI18N
 
         ToDate_Spinner.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, new java.util.Date(), java.util.Calendar.DAY_OF_YEAR));
-        ToDate_Spinner.setEditor(new javax.swing.JSpinner.DateEditor(ToDate_Spinner, "dd. MM. yyyy"));
+        ToDate_Spinner.setEditor(new javax.swing.JSpinner.DateEditor(ToDate_Spinner, formatter.toPattern()));
         ToDate_Spinner.setToolTipText(bundle.getString("TOOLTIP_TO")); // NOI18N
 
         DocBook_Button.setText(bundle.getString("DOCBOOK")); // NOI18N
@@ -173,13 +279,6 @@ public class BasicFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(DocBook_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(PDF_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Quit_Button2))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(From_Label)
@@ -187,26 +286,41 @@ public class BasicFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(To_Label)
-                            .addComponent(ToDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(ToDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 275, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(DocBook_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(Quit_Button2))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(PDF_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(From_Label)
-                    .addComponent(To_Label))
+                    .addComponent(To_Label)
+                    .addComponent(From_Label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ToDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(FromDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(DocBook_Button)
-                    .addComponent(PDF_Button)
-                    .addComponent(Quit_Button2))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(Quit_Button2)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(DocBook_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PDF_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(39, 39, 39))))
         );
 
         jTabbedPane1.addTab(bundle.getString("GENERATE"), jPanel2); // NOI18N
@@ -215,17 +329,11 @@ public class BasicFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1)
         );
 
         pack();
@@ -240,7 +348,7 @@ public class BasicFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_Quit_Button21MouseClicked
     
     /**
-     * Button to  export data from the selected range as PDF
+     * Button to export data from the selected range as PDF
      * @param evt Mouse click on Save as PDF button
      */
     private void PDF_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PDF_ButtonMouseClicked
@@ -254,8 +362,108 @@ public class BasicFrame extends javax.swing.JFrame {
                 + "<!DOCTYPE book PUBLIC '-//OASIS//DTD DocBook XML V4.5//EN' 'http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd'>\n"
                 + "<book lang=\"cs\">\n\n"
                 + "</book>",
-                "xml"); // TODO ►►► DOC_FileChooser
+                "xml"); // ►►► DOC_FileChooser
     }//GEN-LAST:event_DocBook_ButtonMouseClicked
+    
+    /**
+     * Button for saving values to database (checks for full row) 
+     * @param evt Mouse pressed
+     */
+    private void Add_ButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Add_ButtonMousePressed
+        if (jTable1.getModel().getColumnCount() != 3) { 
+            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Incorrect table column count.");            
+            return;
+        };
+        if (jTable1.getModel().getRowCount() == 0) { 
+            // All rows deleted by user            
+            return;
+        };
+
+        for (int row = 0; row < jTable1.getModel().getRowCount(); row++) {
+            // Object represents one working day
+            Day day = new Day();            
+            if (jTable1.getModel().getValueAt(row, 0) == null || 
+                    jTable1.getModel().getValueAt(row, 0).equals("") ||
+                jTable1.getModel().getValueAt(row, 1) == null || 
+                    jTable1.getModel().getValueAt(row, 1).equals("") ||
+                jTable1.getModel().getValueAt(row, 2) == null || 
+                    jTable1.getModel().getValueAt(row, 2).equals("")) {
+                    
+                // empty cell in a row -> skip
+                    continue;
+            }
+            
+            // ►►► DATE
+            Date date;
+            try {
+                System.out.println(jTable1.getModel().getValueAt(row, 0).toString());                
+                date = formatter.parse(jTable1.getModel().getValueAt(row, 0).toString());
+                System.out.println(date.toString());
+            } catch (ParseException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Wrong date format", ex);
+                continue;
+            }
+            Long dateCell = date.getTime()/1000; // UNIX DATE            
+            day.setDate(dateCell);
+            
+            // ►►► HOURS
+            Integer hoursCell = Integer.valueOf(jTable1.getModel().getValueAt(row, 1).toString());
+            day.setHours(hoursCell);
+            
+            // ►►► JOB
+            Jobs job;
+            String jobCell = jTable1.getModel().getValueAt(row, 2).toString();
+            String enumString = getBundleKey(bundle, jobCell).replace("JOBS_", "");
+            job = Jobs.valueOf(enumString);
+    // ♦♦♦ database (TEMP)
+            Database.Jobs TEMP_databaseJob = Database.Jobs.valueOf(job.name());
+            day.setJob(TEMP_databaseJob);
+            //day.setJob(job); 
+            
+            // COMPLETED ROW => add Day
+            try {                
+                databaseManager.createRecord(day);   
+            } catch (DatabaseFailureException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Error when saving to database", ex);
+            }
+            
+        } // <- for all rows
+    }//GEN-LAST:event_Add_ButtonMousePressed
+    
+    /**
+     * Returns matching ResourceBundle key from localised string
+     * @param bundle ResourceBundle to look in
+     * @param locText localised string
+     * @return ResourceBundle key or 'null' if no such text exists
+     */   
+    private String getBundleKey(ResourceBundle bundle, String locText) {
+        for (Enumeration<String> keys = bundle.getKeys(); keys.hasMoreElements(); ) {
+                String key = keys.nextElement();
+                if (bundle.getString( key ).equals(locText)) {
+                     return key;                     
+                }
+        }
+        Logger.getLogger(BasicFrame.class.getName()).log(Level.WARNING, "No key for text \"{0}\" exists", locText);
+        return null;
+    }
+    
+    /**
+     * Add main table row
+     * @param evt Mouse pressed
+     */
+    private void jToggleButton2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton2MousePressed
+        Date date = new Date(); // today's dates
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.addRow(new Object[]{formatter.format(date), 8, ""});
+    }//GEN-LAST:event_jToggleButton2MousePressed
+    /**
+     * Remove main table row
+     * @param evt Mouse pressed
+     */
+    private void jToggleButton3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton3MousePressed
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.removeRow(model.getRowCount()-1);
+    }//GEN-LAST:event_jToggleButton3MousePressed
     
     /**
      * Function saving file in picked format     
@@ -308,11 +516,119 @@ public class BasicFrame extends javax.swing.JFrame {
         javax.swing.JFileChooser FFF = new javax.swing.JFileChooser();
         saveFile(saved_text, extension, FFF);
     }
-    /** 
-     * Button to change language
-     * @param evt - Click button to change language to the next one 
-     *
-     * /    */
+    
+    
+    /**
+     * Cell Editor for Hours column which requies an integer value between 1 and 24
+     * 
+     */
+    private static class HoursCellEditor extends DefaultCellEditor {
+
+        private static final Border red = new LineBorder(Color.red);
+        private static final Border black = new LineBorder(Color.black);
+        private JTextField textField;
+        
+        /**
+         * Constructor for 1-24 integer text field
+         * @param textField 
+         */
+        public HoursCellEditor(JTextField textField) {
+            super(textField);
+            this.textField = textField;
+            this.textField.setHorizontalAlignment(JTextField.RIGHT);
+        }
+        
+        /**
+         * Event listener when user finishes entering input
+         * Validation check for 1-24 integer value in table cell
+         * @return 
+         */
+        @Override
+        public boolean stopCellEditing() {
+            if (textField.getText().equals("")) return super.stopCellEditing(); // empty input
+            try {
+                int v = Integer.valueOf(textField.getText());
+                if (v < 1 || v > 24) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException e) { // incorrect input
+                textField.setBorder(red);
+                return false;
+            }
+            return super.stopCellEditing();
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table,
+            Object value, boolean isSelected, int row, int column) {
+            textField.setBorder(black);
+            return super.getTableCellEditorComponent(
+                table, value, isSelected, row, column);
+        }
+    }
+    /**
+     * ►► Cell Editor for Data and Hours column
+     * For "Hours", replace default date format with "kk" (1 - 24hrs)
+     */
+    private static class DateCellEditor extends DefaultCellEditor {
+
+        private static final Border red = new LineBorder(Color.red);
+        private static final Border black = new LineBorder(Color.black);
+        private JTextField textField;
+        private String format;
+        
+        /**
+         * Constructor for date based text field inside table cells
+         * with default format dd.MM.yyyy
+         * @param textField Table cell
+         */
+        public DateCellEditor(JTextField textField) {
+            super(textField);
+            this.textField = textField;
+            this.textField.setHorizontalAlignment(JTextField.RIGHT);
+            this.format = formatter.toPattern();
+        }
+        /**
+         * Constructor for date based text field inside table cells with custom format 
+         * @param textField Table cell
+         * @param format Date format
+         */
+        public DateCellEditor(JTextField textField, String format) {
+            super(textField);
+            this.textField = textField;
+            this.textField.setHorizontalAlignment(JTextField.RIGHT);
+            this.format = format;
+        }
+        
+        /**
+         * Event listener and validation check when user finished entering input
+         * @return true (= accept input) if it's correct or empty
+         */
+        @Override
+        public boolean stopCellEditing() {
+            if (textField.getText().equals("")) return super.stopCellEditing(); // empty input
+            SimpleDateFormat formatter = new SimpleDateFormat(this.format);
+            formatter.setLenient(false);
+            try {
+                formatter.parse(textField.getText()); // .trim() ?
+            } catch (java.text.ParseException e) { // incorect input
+                textField.setBorder(red);                                                
+                return false;
+            }
+            // Date later than today check here?            
+            return super.stopCellEditing();
+        }
+        
+ 
+        @Override
+        public Component getTableCellEditorComponent(JTable table,
+            Object value, boolean isSelected, int row, int column) {
+            textField.setBorder(black);
+            return super.getTableCellEditorComponent(
+                table, value, isSelected, row, column);
+        }
+
+    }
     
     /**
      * @param args the command line arguments
@@ -340,6 +656,7 @@ public class BasicFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(BasicFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -348,24 +665,28 @@ public class BasicFrame extends javax.swing.JFrame {
             }
         });
     }
-
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Add_Button;
     private javax.swing.JButton DocBook_Button;
     private javax.swing.JSpinner FromDate_Spinner;
     private javax.swing.JLabel From_Label;
-    private javax.swing.JLabel Job_Label;
     private javax.swing.JButton PDF_Button;
     private javax.swing.JFileChooser PDF_FileChooser;
     private javax.swing.JButton Quit_Button1;
     private javax.swing.JButton Quit_Button2;
     private javax.swing.JSpinner ToDate_Spinner;
     private javax.swing.JLabel To_Label;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JDialog jDialog1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JToggleButton jToggleButton3;
     // End of variables declaration//GEN-END:variables
 }
