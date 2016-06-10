@@ -1,5 +1,7 @@
 package Logic;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,6 +18,8 @@ import org.w3c.dom.Attr;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  *Implements AppLogic interface.
@@ -27,11 +31,15 @@ public class AppLogicImpl implements AppLogic{
     public Path createInvoice(List<Day> listOfDays) {
         int sum= 0;
         try{
+            File jobsFile = new File("jobs.xml");
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Element findJob = null;
+            Element salary = null;
             
+            Document docJobs = docBuilder.parse(jobsFile);
             Document doc = docBuilder.newDocument();
-            Element rootElement = doc.createElement("faktura"); //Root element
+            Element rootElement = doc.createElement("invoice"); //Root element
             doc.appendChild(rootElement);
             
             Element days = doc.createElement("days");           // days
@@ -41,7 +49,7 @@ public class AppLogicImpl implements AppLogic{
                 days.appendChild(day);
                 
                 Attr attr = doc.createAttribute("date");            // Atribut dna - datum - primary key
-                attr.setValue("String date");                           // Funkciu pre konvert date na string !
+                attr.setValue(Long.toString(listDay.getDate()));                        
                 day.setAttributeNode(attr);
                 
                 Element hours = doc.createElement("hours");     // Hodiny
@@ -49,10 +57,13 @@ public class AppLogicImpl implements AppLogic{
                 day.appendChild(hours);
                 
                 Element job = doc.createElement("job");
-                job.appendChild(doc.createTextNode("job")); // Funckia pre konvert enumu na string
+                job.appendChild(doc.createTextNode(listDay.getJob().name())); // Funckia pre konvert enumu na string
                 day.appendChild(job);
+               
+                findJob =(Element) docJobs.getElementsByTagName(listDay.getJob().name()).item(0);
+                salary = (Element) findJob.getElementsByTagName("salary").item(0);
                 
-               // sum + = listDay.getHours()*listDay.getJob();      // Vypocita celu sumu       
+                sum = sum +  listDay.getHours()*(Integer.parseInt(salary.getTextContent()));    // Vypocita celu sumu       
             }   
             Element suma = doc.createElement("suma");
             suma.appendChild(doc.createTextNode(String.valueOf(sum)));
@@ -67,6 +78,10 @@ public class AppLogicImpl implements AppLogic{
             pce.printStackTrace();
         } catch (TransformerConfigurationException ex) {
             ex.printStackTrace();
+        } catch (SAXException ex) {
+            Logger.getLogger(AppLogicImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AppLogicImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;    // return path ulozeneho xml
     }
