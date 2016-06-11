@@ -25,13 +25,13 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
- *Implements AppLogic interface.
+ *
  * @author Peter Tirala
  */
 public class AppLogicImpl {
 
     /**
-     * 
+     * Funkcia na vytvorenie invoice.xml
      * @param listOfDays
      * @return 
      */
@@ -105,4 +105,12 @@ public class AppLogicImpl {
         }
         return null;    // return path ulozeneho xml
     }
+    
+    public void transformToDoc(long from,long to){
+        List<Day> list = findRecord(from,to);
+        File invoice = createInvoice(list);
+        Transformer trans = new Transformer();
+        trans.transform(invoice, /*target*/);
+    }
+    
 }
