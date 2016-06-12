@@ -97,7 +97,8 @@ public class DatabaseManagerImpl implements DatabaseManager{
     @Override
     public List<Day> findRecord(long date) throws DatabaseFailureException {
         List<Day> list = new ArrayList<>();
-        Day day = null;
+        Day day;
+
         try {
             Class<?> cl = Class.forName(driver);
             Database database = (Database) cl.newInstance();
@@ -115,6 +116,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
                 }
 
                 day = dayFromResource(res);
+
                 list.add(day);
                 return list;
 
@@ -154,6 +156,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     @Override
     public List<Day> findRecord(long from, long to) throws DatabaseFailureException {
+        int oneDay = 0;
         return null;
     }
 
