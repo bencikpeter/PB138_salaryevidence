@@ -62,33 +62,32 @@ public class DatabaseManagerImpl implements DatabaseManager{
     @Override
     public void createRecord(Day day) throws DatabaseFailureException {
         validate(day);
-
+        Collection col = null;
+        XMLResource res = null;
+        File f;
         try {
-            Collection col = null;
-            XMLResource res = null;
-            File f;
-
-            try {
-                col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
-                res = (XMLResource)col.getResource(String.valueOf(day.getDate())+".xml");
-                if (res == null) {
-                    res = (XMLResource) col.createResource(day.getDate().toString() + ".xml", "XMLResource");
-                }
-
-                f = createFile(day);
-                res.setContent(f);
-                col.storeResource(res);
-            }finally {
-                if(res != null) {
-                    try { ((EXistResource)res).freeResources(); } catch(XMLDBException xe) {xe.printStackTrace();}
-                }
-                if(col != null) {
-                    try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
-                }
+            col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+            res = (XMLResource)col.getResource(String.valueOf(day.getDate())+".xml");
+            if (res == null) {
+                res = (XMLResource) col.createResource(day.getDate().toString() + ".xml", "XMLResource");
             }
+
+            f = createFile(day);
+            res.setContent(f);
+            col.storeResource(res);
         } catch (XMLDBException e) {
             e.printStackTrace();
+        } finally {
+            if(res != null) {
+                try { ((EXistResource)res).freeResources(); } catch(XMLDBException xe) {xe.printStackTrace();}
+            }
+            if(col != null) {
+                try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
+            }
         }
+
+
+
 
     }
 
@@ -99,6 +98,21 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     @Override
     public void deleteRecord(long unixDate) throws DatabaseFailureException {
+        Collection col = null;
+        XMLResource res;
+        try {
+            col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+            col.setProperty(OutputKeys.INDENT, "no");
+            res = (XMLResource)col.getResource(String.valueOf(unixDate)+".xml");
+            col.removeResource(res);
+
+        } catch (XMLDBException e) {
+            e.printStackTrace();
+        } finally {
+            if(col != null) {
+                try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
+            }
+        }
 
     }
 
@@ -106,32 +120,33 @@ public class DatabaseManagerImpl implements DatabaseManager{
     public List<Day> findRecord(long date) throws DatabaseFailureException {
         List<Day> list = new ArrayList<>();
         Day day;
+        Collection col = null;
+        XMLResource res = null;
 
         try {
-
-            Collection col = null;
-            XMLResource res = null;
-            try {
-                col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
-                col.setProperty(OutputKeys.INDENT, "no");
-                res = (XMLResource)col.getResource(String.valueOf(date)+".xml");
-                if (res == null) {
-                    return list;
-                }
-
-                day = dayFromResource(res);
-
-                list.add(day);
+            col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+            col.setProperty(OutputKeys.INDENT, "no");
+            res = (XMLResource)col.getResource(String.valueOf(date)+".xml");
+            if (res == null) {
                 return list;
-
-            }finally {
-                if(col != null) {
-                    try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
-                }
             }
+
+            day = dayFromResource(res);
+
+            list.add(day);
+            return list;
+
         } catch (XMLDBException e) {
             e.printStackTrace();
+        } finally {
+            if(col != null) {
+                try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
+            }
         }
+
+
+
+
 
         return null;
     }
