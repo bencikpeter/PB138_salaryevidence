@@ -39,9 +39,9 @@ import org.w3c.dom.DOMException;
 public class AppLogicImpl {
 
     /**
-     * Funkcia na vytvorenie invoice.xml
-     * @param listOfDays
-     * @return
+     * Create and store new invoice xml file to database.
+     * @param listOfDays Days to xml
+     * @return Created file
      */
     public File createInvoice(List<Day> listOfDays) {
         int sum= 0;
@@ -64,22 +64,22 @@ public class AppLogicImpl {
             rootElement.appendChild(days);
             for(Day listDay : listOfDays){
                 Element day = doc.createElement("day");
-                day.setAttribute("date", String.valueOf(listDay.getDate() ));   // datum
+                day.setAttribute("date", String.valueOf(listDay.getDate() ));   // date
                 days.appendChild(day);
 
-                Element hours = doc.createElement("hours");     // Hodiny
+                Element hours = doc.createElement("hours");     // hours
                 hours.appendChild(doc.createTextNode(String.valueOf(listDay.getHours())));
                 day.appendChild(hours);
 
                 Element job = doc.createElement("job");
-                job.appendChild(doc.createTextNode(listDay.getJob().toString())); // Funckia pre konvert enumu na string
+                job.appendChild(doc.createTextNode(listDay.getJob().toString())); 
                 day.appendChild(job);
 
-                findJob =(Element) docJobs.getElementsByTagName(listDay.getJob().name()).item(0);
+                findJob =(Element) docJobs.getElementsByTagName(listDay.getJob().name()).item(0);       //Get salary per hour for job
                 salary = (Element) findJob.getElementsByTagName("salary").item(0);
 
                 hodiny = hodiny + listDay.getHours();
-                sum = sum +  listDay.getHours()*(Integer.parseInt(salary.getTextContent()));    // Vypocita celu sumu       
+                sum = sum +  listDay.getHours()*(Integer.parseInt(salary.getTextContent()));    // Complet salary      
             }
             Element hodinyElem = doc.createElement("sum");
             hodinyElem.appendChild(doc.createTextNode(String.valueOf(hodiny)));
@@ -124,7 +124,12 @@ public class AppLogicImpl {
         }
         return null;    // return path ulozeneho xml
     }
-    
+    /**
+     * Transform Source into result
+     * @param input Input source
+     * @param result Result
+     * @throws TransformerException 
+     */
     private void transformer(Source input,Result result) throws TransformerException{
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.transform(input, result);
