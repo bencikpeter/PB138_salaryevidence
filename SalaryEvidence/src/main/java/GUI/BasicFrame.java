@@ -3,19 +3,14 @@ package GUI;
 // database imports
 import Database.DatabaseFailureException;
 import Database.Day;
-import Database.DayRecord;
 
 
-import com.sun.javafx.binding.Logging;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.MouseEvent;
 import java.io.*;
 import java.util.Date;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -26,8 +21,11 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
 
+/**
+ * Main GUI
+ * @author Tomáš Ježek
+ */
 public class BasicFrame extends javax.swing.JFrame {
 
     /**
@@ -197,33 +195,32 @@ public class BasicFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(Add_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(Quit_Button1, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap())
+                            .addComponent(Quit_Button1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jToggleButton2)
-                        .addComponent(jToggleButton3))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jToggleButton2)
+                            .addComponent(jToggleButton3, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Quit_Button1))
                     .addComponent(Add_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Quit_Button1)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(bundle.getString("NEW"), jPanel1); // NOI18N
@@ -271,48 +268,47 @@ public class BasicFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(DocBook_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Quit_Button2)
+                                .addGap(3, 3, 3))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(PDF_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(From_Label)
-                            .addComponent(FromDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(To_Label)
-                            .addComponent(ToDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 275, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(DocBook_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(Quit_Button2))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(PDF_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
-                .addContainerGap())
+                                .addComponent(FromDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(To_Label)
+                                    .addComponent(ToDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(182, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(To_Label)
-                    .addComponent(From_Label))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ToDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(FromDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(Quit_Button2)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(DocBook_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(PDF_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(39, 39, 39))))
+                    .addComponent(From_Label)
+                    .addComponent(To_Label))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(FromDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ToDate_Spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(DocBook_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PDF_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
+                .addComponent(Quit_Button2)
+                .addGap(4, 4, 4))
         );
 
         jTabbedPane1.addTab(bundle.getString("GENERATE"), jPanel2); // NOI18N
@@ -321,11 +317,11 @@ public class BasicFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 556, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -345,7 +341,7 @@ public class BasicFrame extends javax.swing.JFrame {
      */
     private void PDF_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PDF_ButtonMouseClicked
         
-        saveFile("PDF PDF PDF PDF PDF PDF PDF", "pdf", PDF_FileChooser); // ►►►        
+        saveTextToFile("Text to save as PDF", "pdf", PDF_FileChooser);       
         
     }//GEN-LAST:event_PDF_ButtonMouseClicked
     /**
@@ -353,11 +349,8 @@ public class BasicFrame extends javax.swing.JFrame {
      * @param evt Mouse click on DocBook buttom
      */
     private void DocBook_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DocBook_ButtonMouseClicked
-        saveFile("<?xml version='1.0' encoding='utf-8'?>\n"                
-                + "<!DOCTYPE book PUBLIC '-//OASIS//DTD DocBook XML V4.5//EN' 'http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd'>\n"
-                + "<book lang=\"cs\">\n\n"
-                + "</book>",
-                "xml"); // ►►► DOC_FileChooser
+        saveTextToFile("Text to save as DocBook", "xml");
+        
     }//GEN-LAST:event_DocBook_ButtonMouseClicked
     
     /**
@@ -368,15 +361,16 @@ public class BasicFrame extends javax.swing.JFrame {
         if (jTable1.getModel().getColumnCount() != 3) { 
             Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Incorrect table column count.");            
             return;
-        };
+        }
         if (jTable1.getModel().getRowCount() == 0) { 
             // All rows deleted by user            
             return;
-        };
+        }
 
         for (int row = 0; row < jTable1.getModel().getRowCount(); row++) {
-            // Object represents one working day
+            
             Day day = new Day();            
+            
             if (jTable1.getModel().getValueAt(row, 0) == null || 
                     jTable1.getModel().getValueAt(row, 0).equals("") ||
                 jTable1.getModel().getValueAt(row, 1) == null || 
@@ -389,17 +383,10 @@ public class BasicFrame extends javax.swing.JFrame {
             }
             
             // ►►► DATE
-            Date date;
-            try {                               
-                date = formatter.parse(jTable1.getModel().getValueAt(row, 0).toString());                
-            } catch (ParseException ex) {
-                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Wrong date format", ex);
-                continue;
-            }
-            Long dateCell = date.getTime()/1000; // UNIX DATE 
-            System.out.println(dateCell);
+            Long dateCell = getTableDate(jTable1, row, 0, formatter);
+            if (dateCell == null) continue; // Exception logged inside method
             day.setDate(dateCell);
-            
+
             // ►►► HOURS
             Integer hoursCell = Integer.valueOf(jTable1.getModel().getValueAt(row, 1).toString());
             day.setHours(hoursCell);
@@ -408,11 +395,8 @@ public class BasicFrame extends javax.swing.JFrame {
             Jobs job;
             String jobCell = jTable1.getModel().getValueAt(row, 2).toString();
             String enumString = getBundleKey(bundle, jobCell).replace("JOBS_", "");
-            job = Jobs.valueOf(enumString);
-    // ♦♦♦ database (TEMP)
-            Database.Jobs TEMP_databaseJob = Database.Jobs.valueOf(job.name());
-            day.setJob(TEMP_databaseJob);
-          //day.setJob(job); 
+            job = Jobs.valueOf(enumString);    
+            day.setJob(job); 
             
             // COMPLETED ROW => add Day
             try {                
@@ -427,6 +411,26 @@ public class BasicFrame extends javax.swing.JFrame {
             
         } // <- for all rows
     }//GEN-LAST:event_Add_ButtonMousePressed
+    
+    /**
+     * Returns date from a table cell in unix format
+     * @param table Table to get date from
+     * @param row Cell row coordinate
+     * @param col Cell column coordinate
+     * @param formatter Date formatter
+     * @return Long table representation, null if date is in incorrect format
+     */
+    private Long getTableDate(JTable table, int row, int col, SimpleDateFormat formatter) {
+        Date date;
+            try {                               
+                date = formatter.parse(table.getModel().getValueAt(row, col).toString());                
+            } catch (ParseException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Wrong date format", ex);
+                return null;
+            }
+            Long dateCell = date.getTime()/1000; // UNIX DATE 
+            return dateCell;
+    }
     
     /**
      * Returns matching ResourceBundle key from localised string
@@ -462,23 +466,23 @@ public class BasicFrame extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.removeRow(model.getRowCount()-1);
     }//GEN-LAST:event_jToggleButton3MousePressed
-    
+        
     /**
-     * Function saving file in picked format     
-     * @param saved_text Text to be saved inside the new file
+     * Function saving given text in a freshly created file of specified format     
+     * @param saved_text Text to be saved inside a new file
      * @param extension Extension of created file without dot (default "txt")
      * @param fileChooser FileChooser to use to handle user input. A default one is used if null.
      */
-    private void saveFile(String saved_text, String extension, javax.swing.JFileChooser fileChooser) {
+    private void saveTextToFile (String saved_text, String extension, javax.swing.JFileChooser fileChooser) {
         if (fileChooser == null) fileChooser = new javax.swing.JFileChooser();
         if (extension == null) extension = "txt";        
         int actionDialog = fileChooser.showSaveDialog(this);        
         //fileChooser.setCurrentDirectory(new File( "./"));        
         if (actionDialog == javax.swing.JFileChooser.APPROVE_OPTION)
-        {
+        {            
             File fileName = new File( fileChooser.getSelectedFile() + "." + extension );
-            if(fileName == null) return;
-            if(fileName.exists())
+            
+            if (fileName.exists())
             {
                 actionDialog = javax.swing.JOptionPane.showConfirmDialog(this, bundle.getString("REPLACE_FILE"));
                 // CANCEL
@@ -510,9 +514,9 @@ public class BasicFrame extends javax.swing.JFrame {
      * @param saved_text Text to be saved inside the new file
      * @param extension Extension of created file without dot (default "txt")
      */
-    private void saveFile (String saved_text, String extension) {
+    private void saveTextToFile (String saved_text, String extension) {
         javax.swing.JFileChooser FFF = new javax.swing.JFileChooser();
-        saveFile(saved_text, extension, FFF);
+        saveTextToFile(saved_text, extension, FFF);
     }
     
     
@@ -565,19 +569,19 @@ public class BasicFrame extends javax.swing.JFrame {
         }
     }
     /**
-     * ►► Cell Editor for Data and Hours column
-     * For "Hours", replace default date format with "kk" (1 - 24hrs)
+     * Cell Editor for Data column
+     * 
      */
     private static class DateCellEditor extends DefaultCellEditor {
 
         private static final Border red = new LineBorder(Color.red);
         private static final Border black = new LineBorder(Color.black);
-        private JTextField textField;
-        private String format;
+        private final JTextField textField;
+        private final String format;
         
         /**
          * Constructor for date based text field inside table cells
-         * with default format dd.MM.yyyy
+         * with default format
          * @param textField Table cell
          */
         public DateCellEditor(JTextField textField) {
@@ -587,7 +591,8 @@ public class BasicFrame extends javax.swing.JFrame {
             this.format = formatter.toPattern();
         }
         /**
-         * Constructor for date based text field inside table cells with custom format 
+         * Constructor for date based text field inside table cells 
+         * with custom format 
          * @param textField Table cell
          * @param format Date format
          */
@@ -658,6 +663,8 @@ public class BasicFrame extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            
+            @Override
             public void run() {
                 new BasicFrame().setVisible(true);
             }

@@ -1,7 +1,7 @@
 package Database;
 
-import java.time.LocalDate;
 import java.util.Objects;
+import GUI.Jobs;
 
 /**
  * Object represents one working day.
