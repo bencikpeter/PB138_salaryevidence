@@ -8,6 +8,8 @@ import Database.Day;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -239,6 +241,7 @@ public class BasicFrame extends javax.swing.JFrame {
         ToDate_Spinner.setToolTipText(bundle.getString("TOOLTIP_TO")); // NOI18N
 
         DocBook_Button.setText(bundle.getString("DOCBOOK")); // NOI18N
+        DocBook_Button.setToolTipText(bundle.getString("DOCBOOK_EXPORT")); // NOI18N
         DocBook_Button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 DocBook_ButtonMouseClicked(evt);
@@ -341,7 +344,23 @@ public class BasicFrame extends javax.swing.JFrame {
      */
     private void PDF_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PDF_ButtonMouseClicked
         
-        saveTextToFile("Text to save as PDF", "pdf", PDF_FileChooser);       
+        // ► String
+        saveTextToFile("Text to save as PDF", "pdf", PDF_FileChooser);  
+        
+        // ► File
+        /*
+            File file = new File("C:\\A\\PDFFFFFFFFFFFFFFFFFFFFFFFFFFF.pdf");
+        
+            List<String> allLines;
+            try {
+                allLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+            } catch (IOException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
+                return;
+            }
+        
+            saveTextToFile(allLines, "pdf", PDF_FileChooser);
+        */
         
     }//GEN-LAST:event_PDF_ButtonMouseClicked
     /**
@@ -349,7 +368,28 @@ public class BasicFrame extends javax.swing.JFrame {
      * @param evt Mouse click on DocBook buttom
      */
     private void DocBook_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DocBook_ButtonMouseClicked
-        saveTextToFile("Text to save as DocBook", "xml");
+        
+        // ► String
+        //saveTextToFile("Text to save as DocBook", "xml");
+        
+        // ► File
+        File file = new File("C:\\A\\XXXXXXXXXXXXXXXXXXXXXXX.xml");
+        
+        List<String> allLines;
+        try {
+            allLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
+        
+        JFileChooser docBookFileChooser = new javax.swing.JFileChooser();
+        javax.swing.filechooser.FileFilter docFilter = new javax.swing.filechooser.FileNameExtensionFilter(bundle.getString("DOCBOOK_FILE_DESCRIPTION"), "xml");
+        docBookFileChooser.setFileFilter(docFilter);        
+        
+        saveTextToFile(allLines, "xml", docBookFileChooser);
+                       
+                       
         
     }//GEN-LAST:event_DocBook_ButtonMouseClicked
     
@@ -413,12 +453,32 @@ public class BasicFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_Add_ButtonMousePressed
     
     /**
-     * Returns date from a table cell in unix format
-     * @param table Table to get date from
+     * Returns date from a given JSpinner in unix date number
+     * (long FROM, long TO for findRecord())
+     * @param spinner JSpinner to get date from
+     * @param formatter Date formatter
+     * @return Long date representation, null if date is in incorrect format
+     */
+    private Long getSpinnerDate(JSpinner spinner, SimpleDateFormat formatter) {
+        Date date;
+        try {
+            date = formatter.parse(spinner.getValue().toString());            
+        } catch (ParseException ex) {
+            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Wrong date format", ex);
+            return null;
+        }
+        Long spinnerCell = date.getTime()/1000; // UNIX DATE
+        return spinnerCell;
+    } 
+    
+    
+    /**
+     * Returns date from a table cell in unix date number
+     * @param table JTable to get date from
      * @param row Cell row coordinate
      * @param col Cell column coordinate
      * @param formatter Date formatter
-     * @return Long table representation, null if date is in incorrect format
+     * @return Long date representation, null if date is in incorrect format
      */
     private Long getTableDate(JTable table, int row, int col, SimpleDateFormat formatter) {
         Date date;
@@ -480,8 +540,7 @@ public class BasicFrame extends javax.swing.JFrame {
         //fileChooser.setCurrentDirectory(new File( "./"));        
         if (actionDialog == javax.swing.JFileChooser.APPROVE_OPTION)
         {            
-            File fileName = new File( fileChooser.getSelectedFile() + "." + extension );
-            
+            File fileName = new File( fileChooser.getSelectedFile() + "." + extension );            
             if (fileName.exists())
             {
                 actionDialog = javax.swing.JOptionPane.showConfirmDialog(this, bundle.getString("REPLACE_FILE"));
@@ -489,6 +548,9 @@ public class BasicFrame extends javax.swing.JFrame {
                 if (actionDialog == javax.swing.JOptionPane.NO_OPTION)
                     return;
             }
+            // —► Cteni ze souboru ◄—
+            // List<String> allLines = Files.readAllLines(Paths.get(path), encoding); // line endings needed
+            
             // Write file
             BufferedWriter outFile = null;
             try {
@@ -509,6 +571,54 @@ public class BasicFrame extends javax.swing.JFrame {
             }            
            }        
     }
+    
+    /**
+     * Function saving given text in a freshly created file of specified format     
+     * @param saved_text Text to be saved inside a new file
+     * @param extension Extension of created file without dot (default "txt")
+     * @param fileChooser FileChooser to use to handle user input. A default one is used if null.
+     */
+    private void saveTextToFile (List<String> saved_text_lines, String extension, javax.swing.JFileChooser fileChooser) {
+        if (fileChooser == null) fileChooser = new javax.swing.JFileChooser();
+        if (extension == null) extension = "txt";        
+        int actionDialog = fileChooser.showSaveDialog(this);        
+        //fileChooser.setCurrentDirectory(new File( "./"));        
+        if (actionDialog == javax.swing.JFileChooser.APPROVE_OPTION)
+        {            
+            File fileName = new File( fileChooser.getSelectedFile() + "." + extension );            
+            if (fileName.exists())
+            {
+                actionDialog = javax.swing.JOptionPane.showConfirmDialog(this, bundle.getString("REPLACE_FILE"));
+                // CANCEL
+                if (actionDialog == javax.swing.JOptionPane.NO_OPTION)
+                    return;
+            }
+            // —► Cteni ze souboru ◄—
+            // List<String> allLines = Files.readAllLines(Paths.get(path), encoding); // line endings needed
+            
+            // Write file
+            BufferedWriter outFile = null;
+            try {
+                outFile = new BufferedWriter( new FileWriter( fileName ) );
+            } catch (IOException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            for (String line : saved_text_lines) {
+                try {
+                    outFile.write(line + "\n"); // ►►►
+                } catch (IOException ex) {
+                    Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            try {
+                outFile.flush();
+                outFile.close();
+            } catch (IOException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+           }        
+    }
+    
     /**
      * Saves file of chosen type using the default JFileChooser
      * @param saved_text Text to be saved inside the new file
@@ -516,6 +626,8 @@ public class BasicFrame extends javax.swing.JFrame {
      */
     private void saveTextToFile (String saved_text, String extension) {
         javax.swing.JFileChooser FFF = new javax.swing.JFileChooser();
+        javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileNameExtensionFilter(bundle.getString("DOCBOOK_FILE_DESCRIPTION"), extension);
+        FFF.setFileFilter(filter);
         saveTextToFile(saved_text, extension, FFF);
     }
     
