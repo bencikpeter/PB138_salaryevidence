@@ -93,7 +93,10 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     @Override
     public void deleteRecord(Day day) throws DatabaseFailureException {
-
+        if (day.getDate() == null) {
+            throw  new IllegalArgumentException("date in day is null");
+        }
+        this.deleteRecord(day.getDate());
     }
 
     @Override
