@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,7 +96,55 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     @Override
     public List<Day> findRecord(long date) throws DatabaseFailureException {
+        try {
+            Class<?> cl = Class.forName(driver);
+            Database database = (Database) cl.newInstance();
+            database.setProperty("ssl-enable", "false");
+            org.xmldb.api.DatabaseManager.registerDatabase(database);
+
+            Collection col = null;
+            XMLResource res = null;
+            try {
+                col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+                col.setProperty(OutputKeys.INDENT, "no");
+                res = (XMLResource)col.getResource(String.valueOf(date)+".xml");
+                if (res == null) {
+                    throw new DatabaseFailureException("document does not exist in db");
+                }
+
+                Day day = dayFromResource(res);
+                List<Day> list = new ArrayList<Day>();
+                list.add(day);
+                return list;
+
+            }finally {
+                if(col != null) {
+                    try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
+                }
+            }
+
+        }catch (Exception ex) {
+            System.out.print("chyba:" + ex);
+        }
+
         return null;
+    }
+
+    private Day dayFromResource(XMLResource res) {
+        try {
+
+            DaySAXHandler handler = new DaySAXHandler();
+            res.getContentAsSAX(handler);
+            Day newDay = handler.getDay();
+
+            return newDay;
+
+
+        } catch (Exception ex) {
+            System.out.print("chyba2:" + ex);
+
+        }
+        return  null;
     }
 
     @Override
