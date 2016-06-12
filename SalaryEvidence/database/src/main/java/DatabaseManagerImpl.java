@@ -96,6 +96,8 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     @Override
     public List<Day> findRecord(long date) throws DatabaseFailureException {
+        List<Day> list = new ArrayList<>();
+        Day day = null;
         try {
             Class<?> cl = Class.forName(driver);
             Database database = (Database) cl.newInstance();
@@ -109,11 +111,10 @@ public class DatabaseManagerImpl implements DatabaseManager{
                 col.setProperty(OutputKeys.INDENT, "no");
                 res = (XMLResource)col.getResource(String.valueOf(date)+".xml");
                 if (res == null) {
-                    throw new DatabaseFailureException("document does not exist in db");
+                    return list;
                 }
 
-                Day day = dayFromResource(res);
-                List<Day> list = new ArrayList<Day>();
+                day = dayFromResource(res);
                 list.add(day);
                 return list;
 
@@ -123,26 +124,30 @@ public class DatabaseManagerImpl implements DatabaseManager{
                 }
             }
 
-        }catch (Exception ex) {
-            System.out.print("chyba:" + ex);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (XMLDBException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
         return null;
     }
 
     private Day dayFromResource(XMLResource res) {
-        try {
+        Day day = null;
 
+        try {
             DaySAXHandler handler = new DaySAXHandler();
             res.getContentAsSAX(handler);
-            Day newDay = handler.getDay();
+            day = handler.getDay();
 
-            return newDay;
-
-
-        } catch (Exception ex) {
-            System.out.print("chyba2:" + ex);
-
+            return day;
+        } catch (XMLDBException e) {
+            e.printStackTrace();
         }
         return  null;
     }
