@@ -1,13 +1,16 @@
 package main.java;
 
+import org.exist.xmldb.EXistResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
+import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -28,32 +31,49 @@ public class DatabaseManagerImpl implements DatabaseManager{
     private static final Logger logger = Logger.getLogger(
             DatabaseManagerImpl.class.getName());
 
+    private static String URI = "xmldb:exist://localhost:8080/exist/xmlrpc";
+    private static String driver = "org.exist.xmldb.DatabaseImpl";
+
+
     @Override
     public void createRecord(Day day) throws DatabaseFailureException {
         validate(day);
 
-        final String driver = "org.exist.xmldb.DatabaseImpl";
 
         try {
 
-            String URI = "xmldb:exist://localhost:8080/exist/xmlrpc";
             Class cl = Class.forName(driver);
             Database database = (Database) cl.newInstance();
             database.setProperty("create-database", "true");
             org.xmldb.api.DatabaseManager.registerDatabase(database);
-            XMLResource res = null;
 
-            Collection col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+            Collection col = null;
+            XMLResource res = null;
             File f = createFile(day);
 
-            XMLResource document = (XMLResource)col.createResource(day.getDate().toString(), "XMLResource");
-            document.setContent(f);
-            System.out.print("storing document " + document.getId() + "...");
-            col.storeResource(document);
-            System.out.println("ok.");
+            try {
+                col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+                f = createFile(day);
 
-        }catch (Exception e) {
-
+                res = (XMLResource) col.createResource(day.getDate().toString() + ".xml", "XMLResource");
+                res.setContent(f);
+                col.storeResource(res);
+            }finally {
+                if(res != null) {
+                    try { ((EXistResource)res).freeResources(); } catch(XMLDBException xe) {xe.printStackTrace();}
+                }
+                if(col != null) {
+                    try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
+                }
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (XMLDBException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
     }
@@ -119,7 +139,11 @@ public class DatabaseManagerImpl implements DatabaseManager{
             transformer.transform(input, result);
 
             return tmp;
-        } catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
             e.printStackTrace();
         }
         return null;
@@ -148,7 +172,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
             root.appendChild(perhourElem);
             return doc;
 
-        } catch (Exception e) {
+        } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
         return  null;
