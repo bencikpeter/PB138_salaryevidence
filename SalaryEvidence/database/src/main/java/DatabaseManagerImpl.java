@@ -32,6 +32,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
     private static final Logger logger = Logger.getLogger(
             DatabaseManagerImpl.class.getName());
 
+    private static final long DAY_LENGTH = 86400L;
     private static String URI = "xmldb:exist://localhost:8080/exist/xmlrpc";
     private static String driver = "org.exist.xmldb.DatabaseImpl";
 
@@ -137,8 +138,13 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     @Override
     public List<Day> findRecord(long from, long to) throws DatabaseFailureException {
-        int oneDay = 0;
-        return null;
+        List<Day> retList = new ArrayList<>();
+
+        for (long i = from; i <= to; i+= this.DAY_LENGTH) {
+            List<Day> list = findRecord(i);
+            retList.addAll(list);
+        }
+        return retList;
     }
 
     @Override
