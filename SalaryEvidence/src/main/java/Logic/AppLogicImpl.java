@@ -122,7 +122,7 @@ public class AppLogicImpl {
                 try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
             }
         }
-        return null;    // return path ulozeneho xml
+        return null;    
     }
     /**
      * Transform Source into result
@@ -135,12 +135,20 @@ public class AppLogicImpl {
         transformer.transform(input, result);
     }
 
-    /*
+    /**
+     * Create invoice in docbook format.
+     * @param from Date from
+     * @param to Date to
+     */
     public void transformToDoc(long from,long to){
-        List<Day> list = findRecord(from,to);
+        List<Day> list = databaseManager.findRecord(from,to);               
+        if(list == null){
+            throw new IllegalArgumentException("No days for selected dates.");
+        }else{
         File invoice = createInvoice(list);
         Transformer trans = new Transformer();
-        trans.transform(invoice, );
-    }*/
+        trans.transform(invoice, );                     //target place
+        }
+    }
 
 }
