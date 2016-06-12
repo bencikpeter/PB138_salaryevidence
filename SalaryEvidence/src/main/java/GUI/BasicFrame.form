@@ -124,13 +124,13 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="Add_Button" min="-2" pref="203" max="-2" attributes="0"/>
+                              <Component id="AddDatabase_Button" min="-2" pref="203" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
-                                      <Component id="jToggleButton2" min="-2" pref="130" max="-2" attributes="0"/>
+                                      <Component id="PlusButton" min="-2" pref="130" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jToggleButton3" min="-2" pref="130" max="-2" attributes="0"/>
+                                      <Component id="MinusButton" min="-2" pref="130" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="Quit_Button1" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -150,13 +150,13 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jToggleButton2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jToggleButton3" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="PlusButton" min="-2" max="-2" attributes="0"/>
+                                  <Component id="MinusButton" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="Quit_Button1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="Add_Button" alignment="0" min="-2" pref="39" max="-2" attributes="0"/>
+                          <Component id="AddDatabase_Button" alignment="0" min="-2" pref="39" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -193,7 +193,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="Add_Button">
+            <Component class="javax.swing.JButton" name="AddDatabase_Button">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="GUI/Bundle.properties" key="ADD" replaceFormat="bundle.getString(&quot;{key}&quot;)"/>
@@ -203,7 +203,7 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Add_ButtonMousePressed"/>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="AddDatabase_ButtonMousePressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="Quit_Button1">
@@ -216,24 +216,24 @@
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Quit_Button21MouseClicked"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JToggleButton" name="jToggleButton2">
+            <Component class="javax.swing.JToggleButton" name="PlusButton">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="GUI/Bundle.properties" key="ADD_ROW" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jToggleButton2MousePressed"/>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="PlusButtonMousePressed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JToggleButton" name="jToggleButton3">
+            <Component class="javax.swing.JToggleButton" name="MinusButton">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="GUI/Bundle.properties" key="REMOVE_ROW" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jToggleButton3MousePressed"/>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="MinusButtonMousePressed"/>
               </Events>
             </Component>
           </SubComponents>

@@ -1,8 +1,8 @@
 package GUI;
 
 // database imports
-import Database.DatabaseFailureException;
 import Database.Day;
+import Logic.AppLogicImpl;
 
 
 import java.awt.Color;
@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -23,12 +24,13 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import org.xmldb.api.base.XMLDBException;
 
 /**
  * Main GUI
  * @author Tomáš Ježek
  */
-public class BasicFrame extends javax.swing.JFrame {
+public class BasicFrame extends javax.swing.JFrame {        
 
     /**
      * Localisation
@@ -68,10 +70,10 @@ public class BasicFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        Add_Button = new javax.swing.JButton();
+        AddDatabase_Button = new javax.swing.JButton();
         Quit_Button1 = new javax.swing.JButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
-        jToggleButton3 = new javax.swing.JToggleButton();
+        PlusButton = new javax.swing.JToggleButton();
+        MinusButton = new javax.swing.JToggleButton();
         jPanel2 = new javax.swing.JPanel();
         From_Label = new javax.swing.JLabel();
         FromDate_Spinner = new javax.swing.JSpinner();
@@ -160,11 +162,11 @@ public class BasicFrame extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(2).setCellRenderer(renderer3);
         jTable1.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(comboBox));
 
-        Add_Button.setText(bundle.getString("ADD")); // NOI18N
-        Add_Button.setToolTipText(bundle.getString("ADD_TOOLTIP")); // NOI18N
-        Add_Button.addMouseListener(new java.awt.event.MouseAdapter() {
+        AddDatabase_Button.setText(bundle.getString("ADD")); // NOI18N
+        AddDatabase_Button.setToolTipText(bundle.getString("ADD_TOOLTIP")); // NOI18N
+        AddDatabase_Button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                Add_ButtonMousePressed(evt);
+                AddDatabase_ButtonMousePressed(evt);
             }
         });
 
@@ -175,17 +177,17 @@ public class BasicFrame extends javax.swing.JFrame {
             }
         });
 
-        jToggleButton2.setText(bundle.getString("ADD_ROW")); // NOI18N
-        jToggleButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+        PlusButton.setText(bundle.getString("ADD_ROW")); // NOI18N
+        PlusButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jToggleButton2MousePressed(evt);
+                PlusButtonMousePressed(evt);
             }
         });
 
-        jToggleButton3.setText(bundle.getString("REMOVE_ROW")); // NOI18N
-        jToggleButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+        MinusButton.setText(bundle.getString("REMOVE_ROW")); // NOI18N
+        MinusButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jToggleButton3MousePressed(evt);
+                MinusButtonMousePressed(evt);
             }
         });
 
@@ -197,13 +199,13 @@ public class BasicFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(Add_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(AddDatabase_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(PlusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(MinusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(Quit_Button1, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -217,11 +219,11 @@ public class BasicFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jToggleButton2)
-                            .addComponent(jToggleButton3, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(PlusButton)
+                            .addComponent(MinusButton, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Quit_Button1))
-                    .addComponent(Add_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(AddDatabase_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -363,6 +365,7 @@ public class BasicFrame extends javax.swing.JFrame {
         */
         
     }//GEN-LAST:event_PDF_ButtonMouseClicked
+    
     /**
      * Button to export data from the selected range as DocBook
      * @param evt Mouse click on DocBook buttom
@@ -373,23 +376,18 @@ public class BasicFrame extends javax.swing.JFrame {
         //saveTextToFile("Text to save as DocBook", "xml");
         
         // ► File
-        File file = new File("C:\\A\\XXXXXXXXXXXXXXXXXXXXXXX.xml");
+        File file = new File("C:\\A\\XXXXXXXXXXXXXXXXXXXXXXX.xml"); 
         
-        List<String> allLines;
-        try {
-            allLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-        } catch (IOException ex) {
-            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
+        // ►► Transform file TO DOCBOOK
+        //
+        //    transformToDoc(getSpinnerDate(FromDate_Spinner, formatter), 
+        //                   getSpinnerDate(ToDate_Spinner, formatter));
         
         JFileChooser docBookFileChooser = new javax.swing.JFileChooser();
         javax.swing.filechooser.FileFilter docFilter = new javax.swing.filechooser.FileNameExtensionFilter(bundle.getString("DOCBOOK_FILE_DESCRIPTION"), "xml");
         docBookFileChooser.setFileFilter(docFilter);        
         
-        saveTextToFile(allLines, "xml", docBookFileChooser);
-                       
-                       
+        saveTextToFile(file, "xml", docBookFileChooser);                                              
         
     }//GEN-LAST:event_DocBook_ButtonMouseClicked
     
@@ -397,7 +395,7 @@ public class BasicFrame extends javax.swing.JFrame {
      * Button for saving values to database (checks for full row) 
      * @param evt Mouse pressed
      */
-    private void Add_ButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Add_ButtonMousePressed
+    private void AddDatabase_ButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AddDatabase_ButtonMousePressed
         if (jTable1.getModel().getColumnCount() != 3) { 
             Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Incorrect table column count.");            
             return;
@@ -406,6 +404,8 @@ public class BasicFrame extends javax.swing.JFrame {
             // All rows deleted by user            
             return;
         }
+        
+        List<Day> days = new ArrayList<>();
 
         for (int row = 0; row < jTable1.getModel().getRowCount(); row++) {
             
@@ -439,18 +439,25 @@ public class BasicFrame extends javax.swing.JFrame {
             day.setJob(job); 
             
             // COMPLETED ROW => add Day
-            try {                
-                databaseManager.createRecord(day);   
-            } catch (DatabaseFailureException ex) {
-                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Error when saving to database\n", ex);
-    // ♦♦♦ TEMP
-            } catch (UnsupportedOperationException ex) {
-                Logger.getLogger(BasicFrame.class.getName()).log(Level.WARNING, "Adding to database currently not supported\n");
-                continue;
-            }
+            days.add(day);            
             
         } // <- for all rows
-    }//GEN-LAST:event_Add_ButtonMousePressed
+        
+        // Filled list -> save
+        File invoice = null;
+        try {
+            invoice = createInvoice(days);
+        } catch (XMLDBException ex) {
+            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        JFileChooser invoiceFileChooser = new javax.swing.JFileChooser();
+        javax.swing.filechooser.FileFilter invoiceFilter = new javax.swing.filechooser.FileNameExtensionFilter(bundle.getString("XML_DAT_DESCRIPTION"), "xml");
+        invoiceFileChooser.setFileFilter(invoiceFilter);
+                
+        saveTextToFile( invoice, "xml", invoiceFileChooser );
+        
+    }//GEN-LAST:event_AddDatabase_ButtonMousePressed
     
     /**
      * Returns date from a given JSpinner in unix date number
@@ -464,7 +471,7 @@ public class BasicFrame extends javax.swing.JFrame {
         try {
             date = formatter.parse(spinner.getValue().toString());            
         } catch (ParseException ex) {
-            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Wrong date format", ex);
+            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Wrong date format in JSpinner", ex);
             return null;
         }
         Long spinnerCell = date.getTime()/1000; // UNIX DATE
@@ -485,7 +492,7 @@ public class BasicFrame extends javax.swing.JFrame {
             try {                               
                 date = formatter.parse(table.getModel().getValueAt(row, col).toString());                
             } catch (ParseException ex) {
-                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Wrong date format", ex);
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Wrong date format in JTable", ex);
                 return null;
             }
             Long dateCell = date.getTime()/1000; // UNIX DATE 
@@ -510,22 +517,22 @@ public class BasicFrame extends javax.swing.JFrame {
     }
     
     /**
-     * Add main table row
+     * Adds main table row
      * @param evt Mouse pressed
      */
-    private void jToggleButton2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton2MousePressed
+    private void PlusButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PlusButtonMousePressed
         Date date = new Date(); // today's dates
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.addRow(new Object[]{formatter.format(date), 8, ""});
-    }//GEN-LAST:event_jToggleButton2MousePressed
+    }//GEN-LAST:event_PlusButtonMousePressed
     /**
-     * Remove main table row
+     * Removes main table row
      * @param evt Mouse pressed
      */
-    private void jToggleButton3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton3MousePressed
+    private void MinusButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MinusButtonMousePressed
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.removeRow(model.getRowCount()-1);
-    }//GEN-LAST:event_jToggleButton3MousePressed
+    }//GEN-LAST:event_MinusButtonMousePressed
         
     /**
      * Function saving given text in a freshly created file of specified format     
@@ -548,8 +555,6 @@ public class BasicFrame extends javax.swing.JFrame {
                 if (actionDialog == javax.swing.JOptionPane.NO_OPTION)
                     return;
             }
-            // —► Cteni ze souboru ◄—
-            // List<String> allLines = Files.readAllLines(Paths.get(path), encoding); // line endings needed
             
             // Write file
             BufferedWriter outFile = null;
@@ -593,8 +598,6 @@ public class BasicFrame extends javax.swing.JFrame {
                 if (actionDialog == javax.swing.JOptionPane.NO_OPTION)
                     return;
             }
-            // —► Cteni ze souboru ◄—
-            // List<String> allLines = Files.readAllLines(Paths.get(path), encoding); // line endings needed
             
             // Write file
             BufferedWriter outFile = null;
@@ -605,7 +608,9 @@ public class BasicFrame extends javax.swing.JFrame {
             }
             for (String line : saved_text_lines) {
                 try {
-                    outFile.write(line + "\n"); // ►►►
+                    outFile.write(line); // ►►►
+                    if ( saved_text_lines.indexOf(line) != (saved_text_lines.size() -1)) 
+                            outFile.write("\n"); // <- line break on all lines except last one
                 } catch (IOException ex) {
                     Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -617,6 +622,31 @@ public class BasicFrame extends javax.swing.JFrame {
                 Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
             }            
            }        
+    }    
+    
+    /**
+     * Saves file using custom JFileChooser
+     * @param file Valid file pointer
+     * @param extension file extension (xml if null)
+     * @param fileChooser Custom JFileChooser (default if null)
+     */
+    private void saveTextToFile (File file, String extension, JFileChooser fileChooser) { 
+        if (file == null) {
+            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Given file is null");
+            return;
+        }
+        if (fileChooser == null) fileChooser = new javax.swing.JFileChooser();
+        if (extension == null) extension = "xml";
+        
+        List<String> allLines;
+        try {
+            allLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }                       
+        
+        saveTextToFile (allLines, extension, fileChooser);
     }
     
     /**
@@ -630,7 +660,6 @@ public class BasicFrame extends javax.swing.JFrame {
         FFF.setFileFilter(filter);
         saveTextToFile(saved_text, extension, FFF);
     }
-    
     
     /**
      * Cell Editor for Hours column which requies an integer value between 1 and 24
@@ -784,12 +813,14 @@ public class BasicFrame extends javax.swing.JFrame {
     }
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Add_Button;
+    private javax.swing.JButton AddDatabase_Button;
     private javax.swing.JButton DocBook_Button;
     private javax.swing.JSpinner FromDate_Spinner;
     private javax.swing.JLabel From_Label;
+    private javax.swing.JToggleButton MinusButton;
     private javax.swing.JButton PDF_Button;
     private javax.swing.JFileChooser PDF_FileChooser;
+    private javax.swing.JToggleButton PlusButton;
     private javax.swing.JButton Quit_Button1;
     private javax.swing.JButton Quit_Button2;
     private javax.swing.JSpinner ToDate_Spinner;
@@ -803,7 +834,5 @@ public class BasicFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
-    private javax.swing.JToggleButton jToggleButton3;
     // End of variables declaration//GEN-END:variables
 }
