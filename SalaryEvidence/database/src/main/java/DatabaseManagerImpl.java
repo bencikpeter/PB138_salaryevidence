@@ -14,13 +14,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,16 +28,39 @@ public class DatabaseManagerImpl implements DatabaseManager{
     private static final Logger logger = Logger.getLogger(
             DatabaseManagerImpl.class.getName());
 
+
     private static final long DAY_LENGTH = 86400L;
-    private static String URI = "xmldb:exist://localhost:8080/exist/xmlrpc";
-    private static String driver = "org.exist.xmldb.DatabaseImpl";
+    private static final String FILE_EXTENSION = ".xml";
+    private static final String CONFIG_PATH = "SalaryEvidence/database/src/main.java/config.properties";
+    private static String URI;
+    private static String recordsColectionPath;
+
+
+
 
     public DatabaseManagerImpl() {
-        this.setupDatabase();
+        Properties config = new Properties();
+        InputStream input;
+
+        try {
+            input = new FileInputStream(CONFIG_PATH);
+            config.load(input);
+            this.setupDatabase(config.getProperty("xmldb.driver"));
+            this.URI = config.getProperty("xmldb.uri");
+            this.recordsColectionPath = config.getProperty("xmldb.recordCollection");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
-    public void setupDatabase() {
+    public void setupDatabase(String driver) {
         try {
+
             Class cl = Class.forName(driver);
             Database database = (Database) cl.newInstance();
             database.setProperty("create-database", "true");
@@ -67,9 +86,9 @@ public class DatabaseManagerImpl implements DatabaseManager{
         File f;
         try {
             col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
-            res = (XMLResource)col.getResource(String.valueOf(day.getDate())+".xml");
+            res = (XMLResource)col.getResource(String.valueOf(day.getDate())+FILE_EXTENSION);
             if (res == null) {
-                res = (XMLResource) col.createResource(day.getDate().toString() + ".xml", "XMLResource");
+                res = (XMLResource) col.createResource(day.getDate().toString() + FILE_EXTENSION, "XMLResource");
             }
 
             f = createFile(day);
@@ -85,10 +104,6 @@ public class DatabaseManagerImpl implements DatabaseManager{
                 try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
             }
         }
-
-
-
-
     }
 
     @Override
@@ -106,7 +121,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
         try {
             col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
             col.setProperty(OutputKeys.INDENT, "no");
-            res = (XMLResource)col.getResource(String.valueOf(unixDate)+".xml");
+            res = (XMLResource)col.getResource(String.valueOf(unixDate)+FILE_EXTENSION);
             col.removeResource(res);
 
         } catch (XMLDBException e) {
@@ -116,7 +131,6 @@ public class DatabaseManagerImpl implements DatabaseManager{
                 try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
             }
         }
-
     }
 
     @Override
@@ -129,7 +143,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
         try {
             col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
             col.setProperty(OutputKeys.INDENT, "no");
-            res = (XMLResource)col.getResource(String.valueOf(date)+".xml");
+            res = (XMLResource)col.getResource(String.valueOf(date)+FILE_EXTENSION);
             if (res == null) {
                 return list;
             }
@@ -146,11 +160,6 @@ public class DatabaseManagerImpl implements DatabaseManager{
                 try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
             }
         }
-
-
-
-
-
         return null;
     }
 
@@ -192,7 +201,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     private File createFile(Day day) {
         try {
-            File tmp = File.createTempFile(String.valueOf(day.getDate()), ".xml");
+            File tmp = File.createTempFile(String.valueOf(day.getDate()), FILE_EXTENSION);
             tmp.deleteOnExit();
 
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
