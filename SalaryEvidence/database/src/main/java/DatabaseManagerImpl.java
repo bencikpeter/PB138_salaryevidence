@@ -35,28 +35,46 @@ public class DatabaseManagerImpl implements DatabaseManager{
     private static String URI = "xmldb:exist://localhost:8080/exist/xmlrpc";
     private static String driver = "org.exist.xmldb.DatabaseImpl";
 
+    public DatabaseManagerImpl() {
+        this.setupDatabase();
+    }
 
-    @Override
-    public void createRecord(Day day) throws DatabaseFailureException {
-        validate(day);
-
-
+    public void setupDatabase() {
         try {
-
             Class cl = Class.forName(driver);
             Database database = (Database) cl.newInstance();
             database.setProperty("create-database", "true");
             org.xmldb.api.DatabaseManager.registerDatabase(database);
 
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (XMLDBException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void createRecord(Day day) throws DatabaseFailureException {
+        validate(day);
+
+        try {
             Collection col = null;
             XMLResource res = null;
-            File f = createFile(day);
+            File f;
 
             try {
                 col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
-                f = createFile(day);
+                res = (XMLResource)col.getResource(String.valueOf(day.getDate())+".xml");
+                if (res == null) {
+                    res = (XMLResource) col.createResource(day.getDate().toString() + ".xml", "XMLResource");
+                }
 
-                res = (XMLResource) col.createResource(day.getDate().toString() + ".xml", "XMLResource");
+                f = createFile(day);
                 res.setContent(f);
                 col.storeResource(res);
             }finally {
@@ -67,20 +85,9 @@ public class DatabaseManagerImpl implements DatabaseManager{
                     try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
                 }
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (XMLDBException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
-
-    }
-
-    @Override
-    public void updateRecord(Day day) throws DatabaseFailureException {
 
     }
 
@@ -100,10 +107,6 @@ public class DatabaseManagerImpl implements DatabaseManager{
         Day day;
 
         try {
-            Class<?> cl = Class.forName(driver);
-            Database database = (Database) cl.newInstance();
-            database.setProperty("ssl-enable", "false");
-            org.xmldb.api.DatabaseManager.registerDatabase(database);
 
             Collection col = null;
             XMLResource res = null;
@@ -125,33 +128,11 @@ public class DatabaseManagerImpl implements DatabaseManager{
                     try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
                 }
             }
-
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (XMLDBException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
         return null;
-    }
-
-    private Day dayFromResource(XMLResource res) {
-        Day day = null;
-
-        try {
-            DaySAXHandler handler = new DaySAXHandler();
-            res.getContentAsSAX(handler);
-            day = handler.getDay();
-
-            return day;
-        } catch (XMLDBException e) {
-            e.printStackTrace();
-        }
-        return  null;
     }
 
     @Override
@@ -230,6 +211,21 @@ public class DatabaseManagerImpl implements DatabaseManager{
             return doc;
 
         } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+
+    private Day dayFromResource(XMLResource res) {
+        Day day;
+
+        try {
+            DaySAXHandler handler = new DaySAXHandler();
+            res.getContentAsSAX(handler);
+            day = handler.getDay();
+
+            return day;
+        } catch (XMLDBException e) {
             e.printStackTrace();
         }
         return  null;

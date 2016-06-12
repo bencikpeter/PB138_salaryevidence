@@ -11,18 +11,12 @@ import java.util.List;
 public interface DatabaseManager {
 
     /**
-     * Stores new record into database, id is generated automatically.
+     * Stores new record into database, date is name of file and primary key.
+     * If file with same date already exist in db file is updated
      * @param day record to be stored.
      * @throws DatabaseFailureException when db operation fails.
      */
     void createRecord(Day day) throws DatabaseFailureException;
-
-    /**
-     * Update record in database, if record is not found in database, nothing happen.
-     * @param day record to be updated.
-     * @throws DatabaseFailureException when db operation fails.
-     */
-    void updateRecord(Day day) throws DatabaseFailureException;
 
     /**
      * Delete record in database, if record is not found, nothing happen.
