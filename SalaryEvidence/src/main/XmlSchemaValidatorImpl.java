@@ -30,6 +30,7 @@ public class XmlSchemaValidatorImpl implements XmlSchemaValidator {
             validator.validate(new StreamSource(new FileInputStream(file)));
             return true;
         } catch (SAXException ex) {
+            //TODO logger
             return false;
         }
     }
