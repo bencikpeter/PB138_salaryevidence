@@ -23,7 +23,7 @@ import java.io.IOException;
 public class DocbookToPdfTransformationImpl implements DocbookToPdfTransformation {
     @Override
     public boolean transform(File source, File dest)  {
-        File dbk2Fo = new File(String.valueOf(Transformations.class.getResource("/docbook2fo/fo/docbook.xsl")));
+        File dbk2Fo = new File("src/resources/docbook2fo/fo/docbook.xsl");
 
         FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
