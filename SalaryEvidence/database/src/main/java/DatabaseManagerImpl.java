@@ -34,9 +34,11 @@ public class DatabaseManagerImpl implements DatabaseManager{
     private static String recordsCollectionPath;
 
 
-
-
-
+    /**
+     * Constructor, read config.properties file initialize IRI and recordsCollectionPath,
+     * also set up connection with database
+     * @throws DatabaseFailureException when any error
+     */
     public DatabaseManagerImpl() throws DatabaseFailureException {
         Properties config = new Properties();
         InputStream input;
@@ -62,7 +64,11 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     }
 
-    public void setupDatabase(String driver) {
+    /**
+     * set up connection with database
+     * @param driver String name of used driver
+     */
+    private void setupDatabase(String driver) {
         try {
             logger.log(Level.INFO, "Setting up database connection");
             Class cl = Class.forName(driver);
@@ -189,6 +195,10 @@ public class DatabaseManagerImpl implements DatabaseManager{
         return retList;
     }
 
+    /**
+     * validate day, check if date, hours and job are correct
+     * @param day day to be validate
+     */
     private void validate(Day day) {
         logger.log(Level.INFO, "Validating day to be store in db");
         if (day == null) {
@@ -205,6 +215,12 @@ public class DatabaseManagerImpl implements DatabaseManager{
         }
     }
 
+    /**
+     * create temp file to be store in db, tem file is deleted on exit
+     * @param day Day from which temp file will be created
+     * @return temp file
+     * @throws DatabaseFailureException when error
+     */
     private File createFile(Day day) throws DatabaseFailureException {
         logger.log(Level.INFO, "Creating temp file to be stored in db");
         try {
@@ -226,6 +242,12 @@ public class DatabaseManagerImpl implements DatabaseManager{
         }
     }
 
+    /**
+     * Create xml document from day
+     * @param day Day from which xml document will be created
+     * @return xml document
+     * @throws DatabaseFailureException when error
+     */
     private Document makeXMLString(Day day) throws DatabaseFailureException {
         DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder icBuilder;
@@ -254,6 +276,12 @@ public class DatabaseManagerImpl implements DatabaseManager{
         }
     }
 
+    /**
+     * create Day class from XMLResource using SAXHandler
+     * @param res XMLResource
+     * @return Day class
+     * @throws DatabaseFailureException when error
+     */
     private Day dayFromResource(XMLResource res) throws DatabaseFailureException {
         logger.log(Level.INFO, "Parsing XMLResource to Day class");
         Day day;
