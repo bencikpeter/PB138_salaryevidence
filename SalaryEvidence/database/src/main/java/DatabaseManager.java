@@ -42,7 +42,7 @@ public interface DatabaseManager {
     List<Day> findRecord(long date) throws DatabaseFailureException;
 
     /**
-     * Find all records in database from - to.
+     * Find all records in database from - to by date.
      * @param from date from when records will be chosen.
      * @param to date to when records will be chosen
      * @return List of records

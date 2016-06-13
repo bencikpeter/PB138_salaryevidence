@@ -15,7 +15,6 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,8 +47,8 @@ public class DatabaseManagerImpl implements DatabaseManager{
             input = new FileInputStream(CONFIG_PATH);
             config.load(input);
             this.setupDatabase(config.getProperty("xmldb.driver"));
-            this.URI = config.getProperty("xmldb.uri");
-            this.recordsCollectionPath = config.getProperty("xmldb.recordCollection");
+            URI = config.getProperty("xmldb.uri");
+            recordsCollectionPath = config.getProperty("xmldb.recordCollection");
 
         } catch (FileNotFoundException e) {
             String msg = "Error, config file not found no path: "+ CONFIG_PATH;
@@ -159,7 +158,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
         List<Day> list = new ArrayList<>();
         Day day;
         Collection col = null;
-        XMLResource res = null;
+        XMLResource res;
 
         try {
             logger.log(Level.INFO, "Getting collection with xml documents");
@@ -188,7 +187,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
     public List<Day> findRecord(long from, long to) throws DatabaseFailureException {
         List<Day> retList = new ArrayList<>();
 
-        for (long i = from; i <= to; i+= this.DAY_LENGTH) {
+        for (long i = from; i <= to; i+= DAY_LENGTH) {
             List<Day> list = findRecord(i);
             retList.addAll(list);
         }
