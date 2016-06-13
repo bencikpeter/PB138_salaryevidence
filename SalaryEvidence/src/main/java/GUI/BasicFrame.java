@@ -31,6 +31,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 
 /**
  * Main GUI
@@ -437,8 +438,13 @@ public class BasicFrame extends javax.swing.JFrame {
             throw new IllegalArgumentException("No days for selected dates.");
         } else {
         File invoice = createInvoice(list);
-        XmlToDocbookTransformation trans = Transformations.getNewInstanceXmlToDocbook("src/main/resources/xmlToDBK.xsl");
-        trans.transform(invoice, DESTINATION); // Destination
+            XmlToDocbookTransformation trans = null;
+            try {
+                trans = Transformations.getNewInstanceXmlToDocbook(new File("src/main/resources/xmlToDBK.xsl"));
+            } catch (TransformerConfigurationException e) {
+                e.printStackTrace();
+            }
+            trans.transform(invoice, DESTINATION); // Destination
         }
     }
     
@@ -454,7 +460,7 @@ public class BasicFrame extends javax.swing.JFrame {
             throw new IllegalArgumentException("No days for selected dates.");
         } else {
         File invoice = createInvoice(list);
-        DocbookToPdfTransformation trans = new DocbookToPdfTransformationImpl();
+        DocbookToPdfTransformation trans = new Transformations.getNewInstanceDocbookToPdf();
         trans.transform(invoice, new File("C:\\A\\XXXXXXXXXXXXXXXXXXXXXXX.xml")); // Destination
         }
     }
