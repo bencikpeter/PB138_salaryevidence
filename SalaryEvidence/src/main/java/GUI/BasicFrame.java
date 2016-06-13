@@ -390,7 +390,7 @@ public class BasicFrame extends javax.swing.JFrame {
         
         // ►► Transform file TO DOCBOOK
         
-        transformToDoc(getSpinnerDate(FromDate_Spinner, formatter), 
+         transformToDoc(getSpinnerDate(FromDate_Spinner, formatter), 
                        getSpinnerDate(ToDate_Spinner, formatter));
   
         
