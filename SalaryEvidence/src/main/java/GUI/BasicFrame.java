@@ -8,6 +8,7 @@ import Logic.Day;
 import Logic.Jobs;
 import Transformations.DocbookToPdfTransformation;
 import Transformations.DocbookToPdfTransformationImpl;
+import Transformations.Transformations;
 import Transformations.XmlToDocbookTransformation;
 import Transformations.XmlToDocbookTransformationImpl;
 
@@ -436,7 +437,7 @@ public class BasicFrame extends javax.swing.JFrame {
             throw new IllegalArgumentException("No days for selected dates.");
         } else {
         File invoice = createInvoice(list);
-        XmlToDocbookTransformation trans = new XmlToDocbookTransformationImpl();
+        XmlToDocbookTransformation trans = Transformations.getNewInstanceXmlToDocbook("src/main/resources/xmlToDBK.xsl");
         trans.transform(invoice, DESTINATION); // Destination
         }
     }
