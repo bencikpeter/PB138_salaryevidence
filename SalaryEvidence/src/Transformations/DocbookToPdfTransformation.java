@@ -1,4 +1,6 @@
-package cz.muni.fi.pb138.salaryevidence.transformations;
+package Transformations;
+
+import cz.muni.fi.pb138.salaryevidence.transformations.Transformations;
 
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.File;

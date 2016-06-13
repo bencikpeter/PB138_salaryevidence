@@ -1,5 +1,6 @@
-package cz.muni.fi.pb138.salaryevidence.transformations;
+package Transformations;
 
+import cz.muni.fi.pb138.salaryevidence.transformations.Transformations;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;

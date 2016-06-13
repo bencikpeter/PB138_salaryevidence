@@ -1,4 +1,4 @@
-package cz.muni.fi.pb138.salaryevidence.transformations;
+package Transformations;
 
 import org.xml.sax.SAXException;
 

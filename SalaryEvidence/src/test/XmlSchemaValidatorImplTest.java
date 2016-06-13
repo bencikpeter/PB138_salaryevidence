@@ -1,7 +1,7 @@
 package test;
 
-import cz.muni.fi.pb138.salaryevidence.transformations.XmlSchemaValidator;
-import cz.muni.fi.pb138.salaryevidence.transformations.XmlSchemaValidatorImpl;
+import Transformations.XmlSchemaValidator;
+import Transformations.XmlSchemaValidatorImpl;
 import org.xml.sax.SAXException;
 
 import java.io.File;
