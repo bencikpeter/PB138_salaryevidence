@@ -25,20 +25,20 @@ import java.util.logging.Logger;
  */
 public class DatabaseManagerImpl implements DatabaseManager{
 
-    private static final Logger logger = Logger.getLogger(
-            DatabaseManagerImpl.class.getName());
+    private static final Logger logger = Logger.getLogger("DatabaseManagerImpl");
 
 
     private static final long DAY_LENGTH = 86400L;
     private static final String FILE_EXTENSION = ".xml";
     private static final String CONFIG_PATH = "SalaryEvidence/database/src/main.java/config.properties";
     private static String URI;
-    private static String recordsColectionPath;
+    private static String recordsCollectionPath;
 
 
 
 
-    public DatabaseManagerImpl() {
+
+    public DatabaseManagerImpl() throws DatabaseFailureException {
         Properties config = new Properties();
         InputStream input;
 
@@ -47,12 +47,16 @@ public class DatabaseManagerImpl implements DatabaseManager{
             config.load(input);
             this.setupDatabase(config.getProperty("xmldb.driver"));
             this.URI = config.getProperty("xmldb.uri");
-            this.recordsColectionPath = config.getProperty("xmldb.recordCollection");
+            this.recordsCollectionPath = config.getProperty("xmldb.recordCollection");
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            String msg = "Error, config file not found no path: "+ CONFIG_PATH;
+            logger.log(Level.SEVERE, msg, e);
+            throw new IllegalArgumentException("Config file not found");
         } catch (IOException e) {
-            e.printStackTrace();
+            String msg = "Error, cannot read from config file.";
+            logger.log(Level.SEVERE, msg, e);
+            throw new DatabaseFailureException("cannot read from config file");
         }
 
 
@@ -67,13 +71,17 @@ public class DatabaseManagerImpl implements DatabaseManager{
             org.xmldb.api.DatabaseManager.registerDatabase(database);
 
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            String msg = "Error, cannot access to database (probably permission denied).";
+            logger.log(Level.SEVERE, msg, e);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            String msg = "Error, instantiation exception.";
+            logger.log(Level.SEVERE, msg, e);
         } catch (XMLDBException e) {
-            e.printStackTrace();
+            String msg = "Error, database probably does not exist.";
+            logger.log(Level.SEVERE, msg, e);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            String msg = "Error, class for driver not found.";
+            logger.log(Level.SEVERE, msg, e);
         }
     }
 
@@ -85,7 +93,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
         XMLResource res = null;
         File f;
         try {
-            col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+            col = org.xmldb.api.DatabaseManager.getCollection(URI + recordsCollectionPath);
             res = (XMLResource)col.getResource(String.valueOf(day.getDate())+FILE_EXTENSION);
             if (res == null) {
                 res = (XMLResource) col.createResource(day.getDate().toString() + FILE_EXTENSION, "XMLResource");
@@ -95,7 +103,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
             res.setContent(f);
             col.storeResource(res);
         } catch (XMLDBException e) {
-            e.printStackTrace();
+            throw new DatabaseFailureException("Error when creating record in database", e);
         } finally {
             if(res != null) {
                 try { ((EXistResource)res).freeResources(); } catch(XMLDBException xe) {xe.printStackTrace();}
@@ -119,13 +127,13 @@ public class DatabaseManagerImpl implements DatabaseManager{
         Collection col = null;
         XMLResource res;
         try {
-            col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+            col = org.xmldb.api.DatabaseManager.getCollection(URI + recordsCollectionPath);
             col.setProperty(OutputKeys.INDENT, "no");
             res = (XMLResource)col.getResource(String.valueOf(unixDate)+FILE_EXTENSION);
             col.removeResource(res);
 
         } catch (XMLDBException e) {
-            e.printStackTrace();
+            throw new DatabaseFailureException("Error when deleting from database", e);
         } finally {
             if(col != null) {
                 try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
@@ -141,7 +149,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
         XMLResource res = null;
 
         try {
-            col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/sample");
+            col = org.xmldb.api.DatabaseManager.getCollection(URI + recordsCollectionPath);
             col.setProperty(OutputKeys.INDENT, "no");
             res = (XMLResource)col.getResource(String.valueOf(date)+FILE_EXTENSION);
             if (res == null) {
@@ -154,13 +162,12 @@ public class DatabaseManagerImpl implements DatabaseManager{
             return list;
 
         } catch (XMLDBException e) {
-            e.printStackTrace();
+            throw new DatabaseFailureException("Error when finding record in database. Record id: "+ date + ". ", e);
         } finally {
             if(col != null) {
                 try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
             }
         }
-        return null;
     }
 
     @Override
@@ -172,16 +179,6 @@ public class DatabaseManagerImpl implements DatabaseManager{
             retList.addAll(list);
         }
         return retList;
-    }
-
-    @Override
-    public Day getOldest() throws DatabaseFailureException {
-        return null;
-    }
-
-    @Override
-    public Day getNewest() throws DatabaseFailureException {
-        return null;
     }
 
     private void validate(Day day) {
@@ -199,7 +196,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
         }
     }
 
-    private File createFile(Day day) {
+    private File createFile(Day day) throws DatabaseFailureException {
         try {
             File tmp = File.createTempFile(String.valueOf(day.getDate()), FILE_EXTENSION);
             tmp.deleteOnExit();
@@ -211,16 +208,15 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
             return tmp;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new DatabaseFailureException("Error when creating temp file to be stored in db", e);
         } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
+            throw new DatabaseFailureException("Error transformation DOM to file wrong configuration", e);
         } catch (TransformerException e) {
-            e.printStackTrace();
+            throw new DatabaseFailureException("Error when transforming(writing) DOM to temp file", e);
         }
-        return null;
     }
 
-    private Document makeXMLString(Day day) {
+    private Document makeXMLString(Day day) throws DatabaseFailureException {
         DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder icBuilder;
         try {
@@ -244,12 +240,11 @@ public class DatabaseManagerImpl implements DatabaseManager{
             return doc;
 
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            throw new DatabaseFailureException("Error when creating DOM", e);
         }
-        return  null;
     }
 
-    private Day dayFromResource(XMLResource res) {
+    private Day dayFromResource(XMLResource res) throws DatabaseFailureException {
         Day day;
 
         try {
@@ -259,8 +254,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
             return day;
         } catch (XMLDBException e) {
-            e.printStackTrace();
+            throw new DatabaseFailureException("Error when parsing XMLResource using SAX", e);
         }
-        return  null;
     }
 }
