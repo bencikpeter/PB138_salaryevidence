@@ -42,7 +42,7 @@ public final class Transformations {
      * @return new instance of DocbookToPdfTransformation
      */
     public static DocbookToPdfTransformation getNewInstanceDocbookToPdf(){
-        return null;
+        return new DocbookToPdfTransformationImpl();
     }
 }
 
