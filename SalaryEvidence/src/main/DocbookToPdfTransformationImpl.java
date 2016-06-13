@@ -19,7 +19,7 @@ import java.io.IOException;
 
 
 /**
- * Created by bencikpeter on 08.06.16.
+ * @author xbencik1
  */
 public class DocbookToPdfTransformationImpl implements DocbookToPdfTransformation {
     @Override

@@ -9,7 +9,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 
 /**
- * Created by bencikpeter on 08.06.16.
+ * @author xbencik1
  */
 public class XmlToDocbookTransformationImpl implements XmlToDocbookTransformation {
 

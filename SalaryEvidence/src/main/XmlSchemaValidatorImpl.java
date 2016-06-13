@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * Created by bencikpeter on 06.06.16.
+ * @author xbencik1
  */
 public class XmlSchemaValidatorImpl implements XmlSchemaValidator {
     private Schema schema;
