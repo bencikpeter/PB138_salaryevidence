@@ -1,0 +1,26 @@
+book { 
+    display: block;
+}
+body, html {
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-family: arial, tahoma, verdana;
+	background: #fff;
+}
+h1, h2, div, p {	
+	padding: 5px;
+	margin: 5px;
+}
+h3, h4 {
+	font-style: italic;
+}
+
+.author, .subtitle {
+color: silver;
+}
+
+}
+.chapter {
+    background-color: #fff; margin: 1em; padding: 0.5em; width: 65%;
+}
