@@ -4,7 +4,7 @@ package Database;
 import Logic.DatabaseFailureException;
 import Logic.ValidateException;
 import Logic.Day;
-import org.exist.xmldb.EXistResource;
+//import org.exist.xmldb.EXistResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xmldb.api.base.Collection;
@@ -120,7 +120,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
             throw new DatabaseFailureException("Error when creating record in database", e);
         } finally {
             if(res != null) {
-                try { ((EXistResource)res).freeResources(); } catch(XMLDBException xe) {xe.printStackTrace();}
+                //try { ((EXistResource)res).freeResources(); } catch(XMLDBException xe) {xe.printStackTrace();}
             }
             if(col != null) {
                 try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}
@@ -367,7 +367,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
             throw new DatabaseFailureException("Error when creating temp file to be stored in db", ex);
         }finally {
             if(res != null) {
-                try { ((EXistResource)res).freeResources(); } catch(XMLDBException xe) {xe.printStackTrace();}
+                //try { ((EXistResource)res).freeResources(); } catch(XMLDBException xe) {xe.printStackTrace();}
             }
             if(col != null) {
                 try { col.close(); } catch(XMLDBException xe) {xe.printStackTrace();}

@@ -17,44 +17,9 @@
             <version>4.12</version>
         </dependency>
         <dependency>
-            <groupId>group.id</groupId>
-            <artifactId>exist</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>group.id</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>group.id</groupId>
-            <artifactId>ws-commonst</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>group.id</groupId>
-            <artifactId>xmldb</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>group.id</groupId>
-            <artifactId>xmlrpc-server</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>group.id</groupId>
-            <artifactId>xmlrpc-client</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>group.id</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>group.id</groupId>
-            <artifactId>xmlrpc-common</artifactId>
-            <version>1.0</version>
+            <groupId>xmldb</groupId>
+            <artifactId>xmldb-api</artifactId>
+            <version>20021118</version>
         </dependency>
     </dependencies>
     <properties>
