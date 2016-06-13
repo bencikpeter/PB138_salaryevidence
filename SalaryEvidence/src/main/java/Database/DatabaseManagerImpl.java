@@ -34,7 +34,9 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     private static final long DAY_LENGTH = 86400L;
     private static final String FILE_EXTENSION = ".xml";
-    private static final String CONFIG_PATH = "SalaryEvidence/database/src/main.java/config.properties";
+    //private static final String CONFIG_PATH = "SalaryEvidence/database/src/main.java/config.properties";
+    private static final String CONFIG_PATH = "SalaryEvidence/src/main/java/Database/config.properties";
+    
     private static String URI;
     private static String recordsCollectionPath;
 
