@@ -430,7 +430,7 @@ public class BasicFrame extends javax.swing.JFrame {
                 }
             }
             
-            trans.transform(invoice, destination); // Destination
+            trans.transform(invoice, destination); // ► Destination
         }
     }
     
@@ -438,7 +438,7 @@ public class BasicFrame extends javax.swing.JFrame {
      * Create invoice in docbook format.
      * @param from Date from
      * @param to Date to
-     * @throws Logic.DatabaseFailureException    * @param to Date to
+     * @throws Logic.DatabaseFailureException    *@param to Date to
      */
     public void transformToPdf(long from, long to) throws DatabaseFailureException{        
         List<Day> list = databaseManager.findRecord(from, to);               
@@ -463,7 +463,7 @@ public class BasicFrame extends javax.swing.JFrame {
             }
         }        
         
-        trans.transform(invoice, destination); // Destination
+        trans.transform(invoice, destination); // ► Destination
         }
     }
     
