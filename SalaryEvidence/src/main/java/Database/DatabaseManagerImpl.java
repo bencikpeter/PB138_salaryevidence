@@ -296,11 +296,8 @@ public class DatabaseManagerImpl implements DatabaseManager{
             throw new DatabaseFailureException("Error when parsing XMLResource using SAX", e);
         }
     }
-    /**
-     * Create and store new invoice xml file to database.
-     * @param listOfDays Days to xml
-     * @return Created file
-     */
+    
+    @Override
     public File createInvoice(List<Logic.Day> listOfDays) throws DatabaseFailureException {
         int sum= 0;
         int hodiny = 0;

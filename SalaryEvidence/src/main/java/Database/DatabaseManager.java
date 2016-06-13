@@ -2,6 +2,7 @@ package Database;
 
 import Logic.DatabaseFailureException;
 import Logic.Day;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -49,6 +50,11 @@ public interface DatabaseManager {
      * @throws DatabaseFailureException when db operation fails.
      */
     List<Day> findRecord(long from, long to) throws DatabaseFailureException;
-
-
+    
+    /**
+     * Create and store new invoice xml file to database.
+     * @param listOfDays Days to xml
+     * @return Created file
+     */
+    File createInvoice(List<Logic.Day> listOfDays) throws DatabaseFailureException; 
 }

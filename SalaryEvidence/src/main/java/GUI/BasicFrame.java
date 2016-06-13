@@ -404,7 +404,7 @@ public class BasicFrame extends javax.swing.JFrame {
         if(list == null){
             throw new IllegalArgumentException("No days for selected dates.");
         } else {
-        File invoice = createInvoice(list);
+        File invoice = databaseManager.createInvoice(list);
             XmlToDocbookTransformation trans = null;
             try {
                 trans = Transformations.getNewInstanceXmlToDocbook(new File("src/main/resources/xmlToDBK.xsl"));
@@ -445,7 +445,7 @@ public class BasicFrame extends javax.swing.JFrame {
         if(list == null){
             throw new IllegalArgumentException("No days for selected dates.");
         } else {
-        File invoice = createInvoice(list);
+        File invoice = databaseManager.createInvoice(list);
         DocbookToPdfTransformation trans = new DocbookToPdfTransformationImpl();
         
         /* PDF FILE CHOOSER */                
