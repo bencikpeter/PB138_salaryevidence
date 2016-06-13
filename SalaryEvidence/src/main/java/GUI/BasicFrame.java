@@ -8,6 +8,7 @@ import Logic.Day;
 import Logic.Jobs;
 import Transformations.DocbookToPdfTransformation;
 import Transformations.DocbookToPdfTransformationImpl;
+import Transformations.Transformations;
 import Transformations.XmlToDocbookTransformation;
 import Transformations.XmlToDocbookTransformationImpl;
 
@@ -30,6 +31,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 
 /**
  * Main GUI
@@ -360,25 +362,7 @@ public class BasicFrame extends javax.swing.JFrame {
      */
     private void PDF_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PDF_ButtonMouseClicked
         
-        // TODO Transform file to PDF
-        // ► String
-        // saveTextToFile("Text to save as PDF", "pdf", PDF_FileChooser);  
-        // ► File
-        /*
-            File file = new File("C:\\A\\PDFFFFFFFFFFFFFFFFFFFFFFFFFFF.pdf");
-        
-            List<String> allLines;
-            try {
-                allLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-            } catch (IOException ex) {
-                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
-                return;
-            }
-        
-            saveTextToFile(allLines, "pdf", PDF_FileChooser);
-        */
-        
-        // TODO Transform file TO DOCBOOK
+        // TODO Transform file TO PDF
         try { 
             
             transformToPdf(getSpinnerDate(FromDate_Spinner, formatter),
@@ -395,22 +379,7 @@ public class BasicFrame extends javax.swing.JFrame {
      * @param evt Mouse click on DocBook buttom
      */
     private void DocBook_ButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DocBook_ButtonMouseClicked
-        
-        
-            // ► String
-            //saveTextToFile("Text to save as DocBook", "xml");
-            
-            // ► File
-            /*
-            File file = new File("C:\\A\\XXXXXXXXXXXXXXXXXXXXXXX.xml");
-            
-            JFileChooser docBookFileChooser = new javax.swing.JFileChooser();
-            javax.swing.filechooser.FileFilter docFilter = new javax.swing.filechooser.FileNameExtensionFilter(bundle.getString("DOCBOOK_FILE_DESCRIPTION"), "xml");
-            docBookFileChooser.setFileFilter(docFilter);
-            
-            saveTextToFile(file, "xml", docBookFileChooser);
-            */
-            
+
         // TODO Transform file TO DOCBOOK
         try { 
             
@@ -424,7 +393,7 @@ public class BasicFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_DocBook_ButtonMouseClicked
     
-     /**
+ /**
      * Create invoice in docbook format.
      * @param from Date from
      * @param to Date to
@@ -436,8 +405,32 @@ public class BasicFrame extends javax.swing.JFrame {
             throw new IllegalArgumentException("No days for selected dates.");
         } else {
         File invoice = createInvoice(list);
-        XmlToDocbookTransformation trans = new XmlToDocbookTransformationImpl();
-        trans.transform(invoice, DESTINATION); // Destination
+            XmlToDocbookTransformation trans = null;
+            try {
+                trans = Transformations.getNewInstanceXmlToDocbook(new File("src/main/resources/xmlToDBK.xsl"));
+            } catch (TransformerConfigurationException e) {
+                e.printStackTrace();
+            }
+            
+            /* FILE CHOOSER */
+            javax.swing.JFileChooser docBookFileChooser = new javax.swing.JFileChooser();
+            javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileNameExtensionFilter(bundle.getString("DOCBOOK_FILE_DESCRIPTION"), "xml");
+            docBookFileChooser.setFileFilter(filter);                                
+            int actionDialog = docBookFileChooser.showSaveDialog(this);
+            //fileChooser.setCurrentDirectory(new File( "./"));
+            File destination = null;
+            if (actionDialog == javax.swing.JFileChooser.APPROVE_OPTION) {
+                destination = new File(docBookFileChooser.getSelectedFile() + "." + "xml");
+                if (destination.exists()) {
+                    actionDialog = javax.swing.JOptionPane.showConfirmDialog(this, bundle.getString("REPLACE_FILE"));
+                    // CANCEL
+                    if (actionDialog == javax.swing.JOptionPane.NO_OPTION) {
+                        return;
+                    }
+                }
+            }
+            
+            trans.transform(invoice, destination); // Destination
         }
     }
     
@@ -454,7 +447,23 @@ public class BasicFrame extends javax.swing.JFrame {
         } else {
         File invoice = createInvoice(list);
         DocbookToPdfTransformation trans = new DocbookToPdfTransformationImpl();
-        trans.transform(invoice, new File("C:\\A\\XXXXXXXXXXXXXXXXXXXXXXX.xml")); // Destination
+        
+        /* PDF FILE CHOOSER */                
+        int actionDialog = PDF_FileChooser.showSaveDialog(this);
+        //fileChooser.setCurrentDirectory(new File( "./"));
+        File destination = null;
+        if (actionDialog == javax.swing.JFileChooser.APPROVE_OPTION) {
+            destination = new File(PDF_FileChooser.getSelectedFile() + "." + "xml");
+            if (destination.exists()) {
+                actionDialog = javax.swing.JOptionPane.showConfirmDialog(this, bundle.getString("REPLACE_FILE"));
+                // CANCEL
+                if (actionDialog == javax.swing.JOptionPane.NO_OPTION) {
+                    return;
+                }
+            }
+        }        
+        
+        trans.transform(invoice, destination); // Destination
         }
     }
     
