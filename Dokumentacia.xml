@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<book>
+	<bookinfo>
+		<author>
+			<title>Záverečná správa</title>
+        		<subtitle>Evidence příjmů</subtitle>
+            	<firstname>Peter</firstname>
+            	<surname>Tirala</surname>
+      	</author>
+
+        	<section>
+        		<title>Záverečná správa</title>
+	        	<para>
+	        		Moja práca na projekte obsahuje:
+					- navrhnutie základnej štruktúry objektu Day
+					- navrhnutie štruktúry enumu Jobs
+					- naimplementovanie pomocnej funkcie pre prácu s DB
+					- naimplementovanie pomocneých funkcií pre GUI
+					- prepojenie všetkých častí projektu do výslednej podoby
+	        	</para>
+    		</section>        
+    		<section>      	
+        		<title>Implementácia</title>
+	        	<para>
+	        		CreateInvoice - Vytvorí a uloží do DB nový invoice.xml na základe dní.
+				TransformToDoc - Pomocná funkcia pre transformovanie faktúry do Docbook formátu
+	        	</para>    
+		</section>
+	</bookinfo>
+</book>
