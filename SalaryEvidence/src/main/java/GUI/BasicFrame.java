@@ -1,8 +1,10 @@
 package GUI;
 
 // database imports
+import Database.DatabaseFailureException;
 import Database.Day;
 import Logic.AppLogicImpl;
+import Database.DatabaseManagerImpl;
 
 
 import java.awt.Color;
@@ -376,18 +378,21 @@ public class BasicFrame extends javax.swing.JFrame {
         //saveTextToFile("Text to save as DocBook", "xml");
         
         // ► File
-        File file = new File("C:\\A\\XXXXXXXXXXXXXXXXXXXXXXX.xml"); 
-        
-        // ►► Transform file TO DOCBOOK
-        //
-        //    transformToDoc(getSpinnerDate(FromDate_Spinner, formatter), 
-        //                   getSpinnerDate(ToDate_Spinner, formatter));
+        /*
+        File file = new File("C:\\A\\XXXXXXXXXXXXXXXXXXXXXXX.xml");        
         
         JFileChooser docBookFileChooser = new javax.swing.JFileChooser();
         javax.swing.filechooser.FileFilter docFilter = new javax.swing.filechooser.FileNameExtensionFilter(bundle.getString("DOCBOOK_FILE_DESCRIPTION"), "xml");
         docBookFileChooser.setFileFilter(docFilter);        
         
-        saveTextToFile(file, "xml", docBookFileChooser);                                              
+        saveTextToFile(file, "xml", docBookFileChooser);   
+        */
+        
+        // ►► Transform file TO DOCBOOK
+        
+        transformToDoc(getSpinnerDate(FromDate_Spinner, formatter), 
+                       getSpinnerDate(ToDate_Spinner, formatter));
+  
         
     }//GEN-LAST:event_DocBook_ButtonMouseClicked
     
@@ -405,8 +410,6 @@ public class BasicFrame extends javax.swing.JFrame {
             return;
         }
         
-        List<Day> days = new ArrayList<>();
-
         for (int row = 0; row < jTable1.getModel().getRowCount(); row++) {
             
             Day day = new Day();            
@@ -439,23 +442,13 @@ public class BasicFrame extends javax.swing.JFrame {
             day.setJob(job); 
             
             // COMPLETED ROW => add Day
-            days.add(day);            
+            try {
+                databaseManager.createRecord(day);
+            } catch (DatabaseFailureException ex) {
+                Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Save day to database error", ex);
+            }
             
-        } // <- for all rows
-        
-        // Filled list -> save
-        File invoice = null;
-        try {
-            invoice = createInvoice(days);
-        } catch (XMLDBException ex) {
-            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        JFileChooser invoiceFileChooser = new javax.swing.JFileChooser();
-        javax.swing.filechooser.FileFilter invoiceFilter = new javax.swing.filechooser.FileNameExtensionFilter(bundle.getString("XML_DAT_DESCRIPTION"), "xml");
-        invoiceFileChooser.setFileFilter(invoiceFilter);
-                
-        saveTextToFile( invoice, "xml", invoiceFileChooser );
+        } // <- for all rows        
         
     }//GEN-LAST:event_AddDatabase_ButtonMousePressed
     
