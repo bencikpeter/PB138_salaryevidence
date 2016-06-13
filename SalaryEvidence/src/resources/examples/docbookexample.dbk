@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+
+<article>
+  <articleinfo>
+    <title>
+      Invoce
+    </title>
+  </articleinfo>
+  <section>
+    <title> Day: 13.8.2016 </title>
+    <para> Job: Assistant </para>
+    <para> Working hours: 8 </para>
+    <para> Per hour: 2 </para>
+  </section>
+  <section>
+    <title> Day: 14.8.2016 </title>
+    <para> Job: Consultant </para>
+    <para> Working hours: 4 </para>
+    <para> Per hour: 3 </para>
+  </section>
+  <section>
+    <title> Day: 15.8.2016 </title>
+    <para> Job: Sales </para>
+    <para> Working hours: 10 </para>
+    <para> Per hour: 2 </para>
+  </section>
+  <section>
+    <title> Total </title>
+    <para> Total working hours: 22 </para>
+    <para> Total salary: 150 </para>
+  </section>
+</article>

@@ -8,6 +8,7 @@
       <xsd:sequence>
         <xsd:element name="days" type="Days" />
         <xsd:element name="sum" type="xsd:nonNegativeInteger" />
+        <xsd:element name="salarysum" type="xsd:nonNegativeInteger" />
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
