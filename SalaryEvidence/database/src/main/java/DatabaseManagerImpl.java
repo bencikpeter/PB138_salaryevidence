@@ -25,8 +25,7 @@ import java.util.logging.Logger;
  */
 public class DatabaseManagerImpl implements DatabaseManager{
 
-    private static final Logger logger = Logger.getLogger("DatabaseManagerImpl");
-
+    private static final Logger logger = Logger.getLogger(DatabaseManagerImpl.class.getName());
 
     private static final long DAY_LENGTH = 86400L;
     private static final String FILE_EXTENSION = ".xml";
@@ -43,6 +42,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
         InputStream input;
 
         try {
+            logger.log(Level.INFO, "Reading config file");
             input = new FileInputStream(CONFIG_PATH);
             config.load(input);
             this.setupDatabase(config.getProperty("xmldb.driver"));
@@ -64,7 +64,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     public void setupDatabase(String driver) {
         try {
-
+            logger.log(Level.INFO, "Setting up database connection");
             Class cl = Class.forName(driver);
             Database database = (Database) cl.newInstance();
             database.setProperty("create-database", "true");
@@ -88,11 +88,13 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     @Override
     public void createRecord(Day day) throws DatabaseFailureException {
+        logger.log(Level.INFO, "Creating document and storing to db");
         validate(day);
         Collection col = null;
         XMLResource res = null;
         File f;
         try {
+            logger.log(Level.INFO, "Getting collection with xml documents");
             col = org.xmldb.api.DatabaseManager.getCollection(URI + recordsCollectionPath);
             res = (XMLResource)col.getResource(String.valueOf(day.getDate())+FILE_EXTENSION);
             if (res == null) {
@@ -101,6 +103,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
             f = createFile(day);
             res.setContent(f);
+            logger.log(Level.INFO, "Storing document to db..");
             col.storeResource(res);
         } catch (XMLDBException e) {
             throw new DatabaseFailureException("Error when creating record in database", e);
@@ -124,12 +127,15 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     @Override
     public void deleteRecord(long unixDate) throws DatabaseFailureException {
+        logger.log(Level.INFO, "Trying to delete document from db");
         Collection col = null;
         XMLResource res;
         try {
+            logger.log(Level.INFO, "Getting collection with xml documents");
             col = org.xmldb.api.DatabaseManager.getCollection(URI + recordsCollectionPath);
             col.setProperty(OutputKeys.INDENT, "no");
             res = (XMLResource)col.getResource(String.valueOf(unixDate)+FILE_EXTENSION);
+            logger.log(Level.INFO, "Deleting document");
             col.removeResource(res);
 
         } catch (XMLDBException e) {
@@ -143,12 +149,14 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     @Override
     public List<Day> findRecord(long date) throws DatabaseFailureException {
+        logger.log(Level.INFO, "Trying to find document in db");
         List<Day> list = new ArrayList<>();
         Day day;
         Collection col = null;
         XMLResource res = null;
 
         try {
+            logger.log(Level.INFO, "Getting collection with xml documents");
             col = org.xmldb.api.DatabaseManager.getCollection(URI + recordsCollectionPath);
             col.setProperty(OutputKeys.INDENT, "no");
             res = (XMLResource)col.getResource(String.valueOf(date)+FILE_EXTENSION);
@@ -182,6 +190,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
     }
 
     private void validate(Day day) {
+        logger.log(Level.INFO, "Validating day to be store in db");
         if (day == null) {
             throw new IllegalArgumentException("day is null");
         }
@@ -197,6 +206,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
     }
 
     private File createFile(Day day) throws DatabaseFailureException {
+        logger.log(Level.INFO, "Creating temp file to be stored in db");
         try {
             File tmp = File.createTempFile(String.valueOf(day.getDate()), FILE_EXTENSION);
             tmp.deleteOnExit();
@@ -245,8 +255,8 @@ public class DatabaseManagerImpl implements DatabaseManager{
     }
 
     private Day dayFromResource(XMLResource res) throws DatabaseFailureException {
+        logger.log(Level.INFO, "Parsing XMLResource to Day class");
         Day day;
-
         try {
             DaySAXHandler handler = new DaySAXHandler();
             res.getContentAsSAX(handler);
