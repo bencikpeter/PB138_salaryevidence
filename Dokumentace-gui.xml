@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC '-//OASIS//DTD DocBook XML V4.2//EN' 
+'http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd'>
+
+<?xml-stylesheet type="text/xsl" href="XML.xsl"?>
+
+<book lang="cs">
+	<bookinfo>
+		<title>Evidence příjmů</title>
+		<subtitle>Záverečná zpráva</subtitle>
+		<author>			
+			<firstname>Tomáš</firstname>
+			<surname>Ježek</surname>
+		</author>
+
+		<chapter>
+			<title>Záverečná zpráva</title>
+			<para>
+				Moje část práce na projektu spočívala v grafickém rozhraní, tedy v návrhu uspořádání swingových komponent a jejich přizpůsobení pro potřeby aplikace (včetně lokalizace do angličtiny, češtiny a slovenštiny). Dále ošetření vkládaných dat už při jejich vpisování (sloupec s formátovaným datem, na celočíselný vstup a rozbalovací možnost různých prací). Po přidání několika funckí na ukládání do souboru se na tlačítka pak navazovaly funkce vytvořené ostatními členy týmu.
+			</para>
+		</chapter>
+
+		<chapter>      	
+			<title>Zpracování</title>
+			<subtitle>Prvky grafického rozhraní</subtitle>
+			<itemizedlist>
+				<listitem>Tvorba GUI a jeho uspořádání/upravení tak, aby vyhovovalo požadavkům aplikace</listitem>
+				<listitem>Validace vstupů</listitem>
+				<listitem>Zpracování vstupů a propojení s dalšími funkcemi programu</listitem>
+			</itemizedlist>				
+			<subtitle>Lokalizace</subtitle>
+			<itemizedlist>
+				<listitem>Lokalizace všech GUI komponent do angličtiny, češtiny a slovenštiny, včetně tooltipů a enumu Jobs</listitem>
+			</itemizedlist>
+			<subtitle>Ostatní</subtitle>
+			<itemizedlist>
+				<listitem>
+					<emphasis>saveTextToFile(...)</emphasis> - Několikrát přetížená metoda na ukládání do souboru s použitím řetězců/seznamu dnů/souboru, s možností použití vlastního okna pro ukládání souborů (např. pdf, na což pak reaguje i filtr zobrazující soubory)</listitem>
+			</itemizedlist>
+		</chapter>
+	</bookinfo>
+</book>
