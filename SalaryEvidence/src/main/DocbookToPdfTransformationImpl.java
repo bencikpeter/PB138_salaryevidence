@@ -23,19 +23,13 @@ import java.io.IOException;
  */
 public class DocbookToPdfTransformationImpl implements DocbookToPdfTransformation {
     @Override
-    public boolean transform(File source, File dest) throws TransformerConfigurationException {
+    public boolean transform(File source, File dest)  {
         File dbk2Fo = new File(String.valueOf(Transformations.class.getResource("/docbook2fo/fo/docbook.xsl")));
-        //XmlToDocbookTransformation transformator;
-        //transformator = Transformations.getNewInstanceXmlToDocbook(dbk2Fo);
-        //File fo;
 
         FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
         try {
-            //fo = File.createTempFile("tmpFo","fo");
-            //transformator.transform(source,fo);
-
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF,foUserAgent, new FileOutputStream(dest));
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer(new StreamSource(dbk2Fo));
