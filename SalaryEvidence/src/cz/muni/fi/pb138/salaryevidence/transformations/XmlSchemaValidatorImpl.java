@@ -1,4 +1,4 @@
-package main;
+package cz.muni.fi.pb138.salaryevidence.transformations;
 
 import org.xml.sax.SAXException;
 
@@ -9,7 +9,6 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**

@@ -1,4 +1,4 @@
-package main;
+package cz.muni.fi.pb138.salaryevidence.transformations;
 
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;
@@ -8,7 +8,6 @@ import org.apache.xmlgraphics.util.MimeConstants;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
