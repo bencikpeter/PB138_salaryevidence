@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <xsd:element name="day" type="Day" />
+
+    <xsd:complexType name="Day">
+        <xsd:sequence>
+            <xsd:element name="hours" type="Hours"/>
+            <xsd:element name="job" type="xsd:string"/>
+            <xsd:element name="perhour" type="Hours" minOccurs="0" />
+        </xsd:sequence>
+        <xsd:attribute name="date" type="Date" use="required"/>
+    </xsd:complexType>
+
+    <xsd:simpleType name="Hours">
+        <xsd:restriction base="xsd:decimal">
+            <xsd:minExclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Date">
+        <xsd:restriction base="xsd:long">
+            <xsd:minInclusive value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>
