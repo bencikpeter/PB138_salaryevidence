@@ -532,13 +532,7 @@ public class BasicFrame extends javax.swing.JFrame {
      * @return Long date representation, null if date is in incorrect format
      */
     private Long getSpinnerDate(JSpinner spinner, SimpleDateFormat formatter) {
-        Date date;
-        try {
-            date = formatter.parse(spinner.getValue().toString());            
-        } catch (ParseException ex) {
-            Logger.getLogger(BasicFrame.class.getName()).log(Level.SEVERE, "Wrong date format in JSpinner", ex);
-            return null;
-        }
+        Date date = (Date) spinner.getValue();        
         Long spinnerCell = date.getTime()/1000; // UNIX DATE
         return spinnerCell;
     } 
