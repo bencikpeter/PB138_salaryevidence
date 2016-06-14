@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE book PUBLIC '-//OASIS//DTD DocBook XML V4.2//EN' 
+<!DOCTYPE book PUBLIC '-//OASIS//DTD DocBook XML V4.2//EN'
 'http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd'>
 
 <?xml-stylesheet type="text/xsl" href="XML.xsl"?>
@@ -8,7 +8,7 @@
 	<bookinfo>
 		<title>Evidence příjmů</title>
 		<subtitle>Záverečná zpráva</subtitle>
-		<author>			
+		<author>
 			<firstname>Tomáš</firstname>
 			<surname>Ježek</surname>
 		</author>
@@ -20,7 +20,7 @@
 			</para>
 		</chapter>
 
-		<chapter>      	
+		<chapter>
 			<title>Zpracování</title>
 			<subtitle>Prvky grafického rozhraní</subtitle>
 			<itemizedlist>
