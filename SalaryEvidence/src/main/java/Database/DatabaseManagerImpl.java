@@ -26,19 +26,41 @@ import org.w3c.dom.DOMException;
 import org.xml.sax.SAXException;
 
 /**
+ * class holds methods for work with database
  * Created by oldrichkonecny on 13.05.16.
  */
 public class DatabaseManagerImpl implements DatabaseManager{
 
     private static final Logger logger = Logger.getLogger(DatabaseManagerImpl.class.getName());
 
+    /**
+     * final variable represents length of day in seconds
+     */
     private static final long DAY_LENGTH = 86400L;
+    /**
+     * final variable represents file extension (.xml)
+     */
     private static final String FILE_EXTENSION = ".xml";
+    /**
+     * final variable represents path to config file
+     */
     private static final String CONFIG_PATH = "SalaryEvidence/src/main/java/Database/config.properties";
     //private static final String CONFIG_PATH = "src/main/java/Database/config.properties";
-    
+
+    /**
+     * variable represents database URI
+     * is read from config
+     */
     private static String URI;
+    /**
+     * variable represents path to records collection in db
+     * is read from config
+     */
     private static String recordsCollectionPath;
+    /**
+     * variable represents path to invoice collection in db
+     * is read from config
+     */
     private static String invoiceCollectionPath;
 
 
