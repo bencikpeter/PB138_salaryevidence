@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE book PUBLIC '-//OASIS//DTD DocBook XML V4.2//EN'
+'http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd'>
+
+<?xml-stylesheet type="text/xsl" href="XML.xsl"?>
+<book lang="sk">
+	<bookinfo>
+		<title>Evidencia príjmov</title>
+		<subtitle>Záverečná správa</subtitle>
+		<author>
+			<firstname>Peter</firstname>
+			<surname>Benčík</surname>
+		</author>
+  </bookinfo>
+	<chapter>
+		<title>Záverečná správa</title>
+		<para>
+			Moja časť práce na projekte spočívala v návrhu a implementácii transformačnej knižnice.
+      Knižnica obstaráva validácie jednotlivých typov dokumentov oproti ich XML schémam,
+      Ďalej transformácie transformácie z internch formátov do formátov DocBook a PDF.
+      Vytváral som tak isto aj XML schémy XSL transformácie používané v knižnici.
+		</para>
+	</chapter>
+
+	<chapter>
+		<title>Spracovanie</title>
+		<subtitle>Transformačná knižnica</subtitle>
+		<itemizedlist>
+			<listitem><para>Tvorma XML schém interných formátov</para></listitem>
+			<listitem><para>Tvorba XSL transformácie do formátu DocBook</para></listitem>
+			<listitem><para>Implementácia factory class Transformations poskytujúcej inštancie jednotlivých transformátorov a validátorov</para></listitem>
+			<listitem><para>Implementácia tried generujúcich výstup vo formáte DocBook a PDF</para></listitem>
+			<listitem><para>Implementácia validátoru XML schém</para></listitem>
+		</itemizedlist>
+  </chapter>
+  <chapter>
+    <title>Spracovanie</title>
+    <subtitle>Ostatné</subtitle>
+    <itemizedlist>
+      <listitem><para>Koordinácia práce na projekte, príprava prezentácie na obhajobu</para></listitem>
+    </itemizedlist>
+	</chapter>
+</book>
