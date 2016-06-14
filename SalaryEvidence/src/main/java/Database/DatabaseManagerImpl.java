@@ -34,11 +34,12 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
     private static final long DAY_LENGTH = 86400L;
     private static final String FILE_EXTENSION = ".xml";
-    //private static final String CONFIG_PATH = "SalaryEvidence/database/src/main.java/config.properties";
-    private static final String CONFIG_PATH = "src/main/java/Database/config.properties";
+    private static final String CONFIG_PATH = "SalaryEvidence/src/main/java/Database/config.properties";
+    //private static final String CONFIG_PATH = "src/main/java/Database/config.properties";
     
     private static String URI;
     private static String recordsCollectionPath;
+    private static String invoiceCollectionPath;
 
 
     /**
@@ -57,6 +58,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
             this.setupDatabase(config.getProperty("xmldb.driver"));
             URI = config.getProperty("xmldb.uri");
             recordsCollectionPath = config.getProperty("xmldb.recordCollection");
+            invoiceCollectionPath = config.getProperty("xmldb.invoiceCollection");
 
         } catch (FileNotFoundException e) {
             String msg = "Error, config file not found no path: "+ CONFIG_PATH;
@@ -350,7 +352,7 @@ public class DatabaseManagerImpl implements DatabaseManager{
 
             transformer(new DOMSource(doc),new StreamResult(tmp));
             
-            col = org.xmldb.api.DatabaseManager.getCollection(URI + "/db/invoice");
+            col = org.xmldb.api.DatabaseManager.getCollection(URI + invoiceCollectionPath);
 
             res = (XMLResource)col.createResource("faktura-"+first+"-"+last+".xml", "XMLResource");
             res.setContent(tmp);

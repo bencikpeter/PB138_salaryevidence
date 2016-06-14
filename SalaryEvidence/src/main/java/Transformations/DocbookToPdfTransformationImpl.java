@@ -25,7 +25,8 @@ public class DocbookToPdfTransformationImpl implements DocbookToPdfTransformatio
     public boolean transform(File source, File dest)  {
         File dbk2Fo = new File("src/resources/docbook2fo/fo/docbook.xsl");
 
-        FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
+        File f = new File(".");
+        FopFactory fopFactory = FopFactory.newInstance(); //Error
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
         try {

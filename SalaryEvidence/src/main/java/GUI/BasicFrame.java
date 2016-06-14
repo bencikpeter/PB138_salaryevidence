@@ -644,7 +644,7 @@ public class BasicFrame extends javax.swing.JFrame {
     
     /**
      * Function saving given text in a freshly created file of specified format     
-     * @param saved_text Text to be saved inside a new file
+     * @param saved_text_lines Text to be saved inside a new file
      * @param extension Extension of created file without dot (default "txt")
      * @param fileChooser FileChooser to use to handle user input. A default one is used if null.
      */
