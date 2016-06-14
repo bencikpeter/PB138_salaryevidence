@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+
+    <xsd:element name="REGIONAL_MANAGER">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="salary" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="ASSISTANT_REGIONAL_MANAGER">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="salary" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="HUMAN_RESOURCES_REPRESENTATIVE">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="salary" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="SALESPERSON">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="salary" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="ACCOUNTANT">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="salary" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="SUPPLIER_RELATIONS">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="salary" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="QUALITY_ASSURANCE">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="salary" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="CUSTOMER_RELATIONS">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="salary" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="WAREHOUSE_FOREMAN">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="salary" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="RECEPTIONIST">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="salary" type="xsd:nonNegativeInteger" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xs:schema>
