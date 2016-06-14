@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC '-//OASIS//DTD DocBook XML V4.2//EN'
+        'http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd'>
+
+<?xml-stylesheet type="text/xsl" href="XML.xsl"?>
+
+<book lang="cs">
+    <bookinfo>
+        <title>Evidence příjmů</title>
+        <subtitle>Záverečná zpráva</subtitle>
+        <author>
+            <firstname>Oldřich</firstname>
+            <surname>Konečný</surname>
+        </author>
+        <chapter>
+            <title>Závěrečná zpráva</title>
+            <para>
+                Mým úkolem v projektu bylo hlavně implementovat metody pro práci s databází, dále pak konfigurace databáze a načítání konfigurace aplikace.
+            </para>
+        </chapter>
+        <chapter>
+            <title>Externí nástroje a knihovny pro práci s db</title>
+            <para>
+                V projektu používáme nativní xml databázi Exist:db. Je nutné mít exist nainstalovanou, spuštěnou a v ní mít vytvořené kolekce records a invoices(nebo jiné podle nastavení config)
+                Dále jsou potřeba knihovny XMLDB-API, což je api které komunikuje s databází, je třeba jestě přidat dependenci na soubor z exist složky pro databázový driver.
+            </para>
+        </chapter>
+        <chapter>
+            <title>Zpracování</title>
+            <subtitle>Způsob uspořádání</subtitle>
+            <itemizedlist>
+                <listitem>DatabaseManager(Impl) hlavní třída pro práci s databází metody: create, delete, find</listitem>
+                <listitem>DaySAXHandler rozšiřuje DefaultHandler, pro parsování XMLResource</listitem>
+                <listitem>DatabaseFailureException, ValidationException: výjimky</listitem>
+                <listitem>Day třída pro reprezentaci jednoho záznamu v databázi</listitem>
+                <listitem>Jobs enum, výčet pozic na kterých může člověk pracovat</listitem>
+            </itemizedlist>
+        </chapter>
+
+
+
+
+    </bookinfo>
+</book>
