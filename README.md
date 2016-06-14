@@ -1,6 +1,6 @@
 # Evidencia príjmov
 
-Táto aplikácia postavená na platforme Java sa bude zaoberať evidenciou príjmov zamestnancov spoločnosti. Umožní generovať faktúry vo formáte PDF a  Docbook a bude poskytovať štatistické funkcie na analýzu personálnych výdavkov spoločnosti. Podporuje taktiež evidenciu faktúr za určité zvolené obdobie.
+Táto aplikácia postavená na platforme Java sa bude zaoberať evidenciou príjmov zamestnancov spoločnosti. Umožní generovať faktúry vo formáte PDF a  Docbook obsahujúce vykonanú prácu, pozíciu a jej platové ohodnotenie pre každý deň a súčet pracovných hodín a celú výplatu za zvolené obdobie
 
 ##Koncept
 1. dokázať si vytvoriť nový výkaz (vo formáte xml)
